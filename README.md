@@ -29,27 +29,27 @@ A weather-based web application that fetches weather forecasts and provides aler
 
 ### 🖥️ 1. Clone the Repo
 
-```bash
+```shell
 git clone https://github.com/yourusername/weather-alert-app.git
 cd weather-alert-app
 ```
 
 ### 🌐 2. Frontend Setup
 
-```
+```shell
 npm install          # Install dependencies
 npm run dev          # Start frontend server (http://localhost:5173)
 ```
 
 You must create a .env file in the root project directory:
 
-```
+```shell
 VITE_WEATHER_API_KEY=your_openweathermap_api_key
 ```
 
 ### 🔧 3. Backend Setup
 
-```
+```shell
 cd weather-app-backend
 npm install
 node --experimental-modules index.mjs # Start backend server (http://localhost:4000)
@@ -57,7 +57,7 @@ node --experimental-modules index.mjs # Start backend server (http://localhost:4
 
 Create a .env file inside the weather-app-backend/ folder:
 
-```
+```shell
 PORT=4000
 DB_USER=postgres
 DB_PASSWORD=your_password
