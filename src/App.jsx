@@ -61,7 +61,7 @@ function App() {
   if (error) {
     return (
       <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-        <h1>Weather Alert App</h1>
+        <h1>Μanagement of environmental phenomena and natural disasters</h1>
         <p style={{ color: 'red' }}>{error}</p>
       </div>
     );
@@ -70,7 +70,7 @@ function App() {
   if (!position || !forecast) {
     return (
       <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-        <h1>Weather Alert App</h1>
+        <h1>Μanagement of environmental phenomena and natural disasters</h1>
         <p>Loading location and weather data...</p>
       </div>
     );
@@ -78,7 +78,7 @@ function App() {
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h1>Weather Alert App</h1>
+      <h1>Μanagement of environmental phenomena and natural disasters</h1>
       <div className="map">
         <Map position={position} />
       </div>
