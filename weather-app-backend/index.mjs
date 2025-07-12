@@ -2,6 +2,8 @@ import express from 'express';
 import pg from 'pg';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import fs from 'fs/promises'; // for reading files asynchronously
+import path from 'path';
 
 dotenv.config();
 
@@ -34,7 +36,24 @@ app.get('/test-db', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+// script to run the SQL file (schema.sql) automatically on server start to ensure tables exist
+async function runSchema() {
+  try {
+    // Read the schema.sql file content
+    const schemaPath = path.resolve('./schema.sql'); // Adjust path if needed
+    const sql = await fs.readFile(schemaPath, 'utf-8');
+
+    // Run the SQL commands
+    await pool.query(sql);
+    console.log('Database schema applied successfully!');
+  } catch (err) {
+    console.error('Error applying schema:', err);
+  }
+}
+
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+
+  // Run the schema after server starts
+  await runSchema();
 });
