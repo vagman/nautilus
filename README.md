@@ -30,8 +30,8 @@ A weather-based web application that fetches weather forecasts and provides aler
 ### 🖥️ 1. Clone the Repo
 
 ```shell
-git clone https://github.com/yourusername/weather-alert-app.git
-cd weather-alert-app
+git clone https://github.com/vagman/nautilus.git
+cd nautilus
 ```
 
 ### 🌐 2. Frontend Setup
