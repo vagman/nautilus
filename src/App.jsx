@@ -41,7 +41,7 @@ function App() {
         setForecast(data.list); // contains 5 days of data in 3-hour intervals
       })
       .catch(err => console.error('Fetch error:', err));
-  }, [position]);
+  }, [position, apiKey]);
 
   // Helper: Group forecast into 5 days
   function groupForecastByDay(forecastList) {

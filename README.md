@@ -87,7 +87,7 @@ curl http://localhost:4000/test-db
 | Task                      | Command                               |
 | ------------------------- | ------------------------------------- |
 | Start Frontend            | npm run dev (in project root)         |
-| Start Backend             | node --experimental-modules index.mjs |
+| Start Backend             | node index.mjs                        |
 | Build Frontend            | npm run build                         |
 | Install Frontend Packages | npm install                           |
 | Install Backend Packages  | cd weather-app-backend && npm install |
