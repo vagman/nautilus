@@ -1,9 +1,6 @@
 -- Create database using postgresql CLI
 -- createdb -U postgres weather_app
 
-DROP SCHEMA public CASCADE;
-CREATE SCHEMA public;
-
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
