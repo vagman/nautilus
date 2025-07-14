@@ -1,15 +1,29 @@
 import { useEffect, useState } from 'react';
 import Map from './components/Map';
 import './App.css';
+import AuthForm from './components/AuthForm';
 
 function App() {
   const [position, setPosition] = useState(null);
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(() => {
+    // Try to get user from localStorage
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  // -------- LOGOUT ---------
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null); // this will bring back the login/signup form
+  };
 
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
   useEffect(() => {
+    if (!user) return; // Exit early if no user
     if (!navigator.geolocation) {
       setError('Geolocation is not supported by your browser');
       return;
@@ -26,7 +40,7 @@ function App() {
         setError('Unable to retrieve your location');
       }
     );
-  }, []);
+  }, [user]);
 
   // Step 2: Fetch 5-day forecast when position is available
   useEffect(() => {
@@ -41,7 +55,11 @@ function App() {
         setForecast(data.list); // contains 5 days of data in 3-hour intervals
       })
       .catch(err => console.error('Fetch error:', err));
-  }, [position, apiKey]);
+  }, [user, position, apiKey]);
+
+  if (!user) {
+    return <AuthForm onAuthSuccess={setUser} />;
+  }
 
   // Helper: Group forecast into 5 days
   function groupForecastByDay(forecastList) {
@@ -79,6 +97,11 @@ function App() {
   return (
     <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
       <h1>Μanagement of environmental phenomena and natural disasters</h1>
+      {user && (
+        <button onClick={logout} style={{ marginBottom: '1rem' }}>
+          Logout
+        </button>
+      )}
       <div className="map">
         <Map position={position} />
       </div>
