@@ -1,13 +1,19 @@
+// AuthForm.jsx
 import { useState } from 'react';
+import './AuthForm.css';
+import nautilusLightLogo from '../assets/nautilus-white-bg.png';
+import nautilusDarkLogo from '../assets/nautilus.png';
 
 export default function AuthForm({ onAuthSuccess }) {
-  const [mode, setMode] = useState('login'); // or 'signup'
+  const [mode, setMode] = useState('login');
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
   });
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   const switchMode = () => {
     setMode(mode === 'login' ? 'signup' : 'login');
@@ -25,68 +31,97 @@ export default function AuthForm({ onAuthSuccess }) {
     try {
       const response = await fetch(`http://localhost:4000/${mode}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Something went wrong');
-      }
+      if (!response.ok) throw new Error(data.error || 'Something went wrong');
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      onAuthSuccess(data.user); // callback to App.jsx to show main UI
+      onAuthSuccess(data.user);
     } catch (err) {
       setError(err.message);
     }
   };
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h2>{mode === 'login' ? 'Login' : 'Sign Up'}</h2>
-      <form onSubmit={handleSubmit}>
-        {mode === 'signup' && (
-          <div>
-            <label>Username:</label>
+    <div className={`auth-container ${darkMode ? 'dark' : ''}`}>
+      <div className="auth-left">
+        <img
+          src={darkMode ? nautilusDarkLogo : nautilusLightLogo}
+          alt="Nautilus logo"
+          className="auth-logo"
+        />
+        <h2>Welcome to Nautilus</h2>
+        <p>
+          Receive real-time alerts for natural disasters and extreme weather
+          phenomena in your area.
+        </p>
+        <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>
+          {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+        </button>
+      </div>
+
+      <div className="auth-card">
+        <h2>{mode === 'login' ? 'Login' : 'Sign Up'}</h2>
+        <form onSubmit={handleSubmit}>
+          {mode === 'signup' && (
+            <div className="input-group">
+              <span className="icon">👤</span>
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
+          <div className="input-group">
+            <span className="icon">📧</span>
             <input
-              type="text"
-              name="username"
-              value={formData.username}
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
               onChange={handleChange}
               required
             />
           </div>
-        )}
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">{mode === 'login' ? 'Login' : 'Sign Up'}</button>
-      </form>
-      <button onClick={switchMode} style={{ marginTop: '1rem' }}>
-        Switch to {mode === 'login' ? 'Sign Up' : 'Login'}
-      </button>
+          <div className="input-group">
+            <span className="icon">🔒</span>
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <span
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </span>
+            </div>
+          </div>
+          {error && <p className="error">{error}</p>}
+          <button className="submit-btn" type="submit">
+            {mode === 'login' ? 'Login' : 'Sign Up'}
+          </button>
+        </form>
+
+        <button className="switch-btn" onClick={switchMode}>
+          {mode === 'login'
+            ? "Don't have an account? Sign up"
+            : 'Already have an account? Login'}
+        </button>
+      </div>
     </div>
   );
 }
