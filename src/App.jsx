@@ -2,28 +2,31 @@ import { useEffect, useState } from 'react';
 import Map from './components/Map';
 import './App.css';
 import AuthForm from './components/AuthForm';
+import LogoutModal from './components/LogoutModal';
 
 function App() {
   const [position, setPosition] = useState(null);
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(() => {
-    // Try to get user from localStorage
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
-
-  // -------- LOGOUT ---------
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null); // this will bring back the login/signup form
-  };
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
+  // -------- LOGOUT FUNCTION --------
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+  };
+
+  // -------- GET USER LOCATION --------
   useEffect(() => {
-    if (!user) return; // Exit early if no user
+    if (!user) return;
+
     if (!navigator.geolocation) {
       setError('Geolocation is not supported by your browser');
       return;
@@ -42,7 +45,7 @@ function App() {
     );
   }, [user]);
 
-  // Step 2: Fetch 5-day forecast when position is available
+  // -------- FETCH WEATHER FORECAST --------
   useEffect(() => {
     if (!position) return;
 
@@ -52,7 +55,7 @@ function App() {
       .then(res => res.json())
       .then(data => {
         console.log('Forecast data:', data);
-        setForecast(data.list); // contains 5 days of data in 3-hour intervals
+        setForecast(data.list);
       })
       .catch(err => console.error('Fetch error:', err));
   }, [user, position, apiKey]);
@@ -61,25 +64,23 @@ function App() {
     return <AuthForm onAuthSuccess={setUser} />;
   }
 
-  // Helper: Group forecast into 5 days
+  // -------- GROUP FORECAST BY DAY --------
   function groupForecastByDay(forecastList) {
     const days = {};
-
     forecastList.forEach(entry => {
-      const date = entry.dt_txt.split(' ')[0]; // "YYYY-MM-DD"
+      const date = entry.dt_txt.split(' ')[0];
       if (!days[date]) {
         days[date] = [];
       }
       days[date].push(entry);
     });
-
-    return Object.entries(days).slice(0, 5); // Only next 5 days
+    return Object.entries(days).slice(0, 5);
   }
 
   if (error) {
     return (
       <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-        <h1>Μanagement of environmental phenomena and natural disasters</h1>
+        <h1>Management of Environmental Phenomena and Natural Disasters</h1>
         <p style={{ color: 'red' }}>{error}</p>
       </div>
     );
@@ -88,7 +89,7 @@ function App() {
   if (!position || !forecast) {
     return (
       <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-        <h1>Μanagement of environmental phenomena and natural disasters</h1>
+        <h1>Management of Environmental Phenomena and Natural Disasters</h1>
         <p>Loading location and weather data...</p>
       </div>
     );
@@ -96,12 +97,27 @@ function App() {
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h1>Μanagement of environmental phenomena and natural disasters</h1>
+      <h1>Management of Environmental Phenomena and Natural Disasters</h1>
+
       {user && (
-        <button onClick={logout} style={{ marginBottom: '1rem' }}>
+        <button
+          onClick={() => setShowLogoutModal(true)}
+          style={{ marginBottom: '1rem' }}
+        >
           Logout
         </button>
       )}
+
+      {showLogoutModal && (
+        <LogoutModal
+          onConfirm={() => {
+            logout();
+            setShowLogoutModal(false);
+          }}
+          onCancel={() => setShowLogoutModal(false)}
+        />
+      )}
+
       <div className="map">
         <Map position={position} />
       </div>
