@@ -3,8 +3,12 @@ import Map from './components/Map';
 import './App.css';
 import AuthForm from './components/AuthForm';
 import LogoutModal from './components/LogoutModal';
+import { generateSurroundingCoordinates } from './utils/generateSurroundingCoordinates';
+import Footer from './components/Footer';
 
 function App() {
+  const [tempRadius, setTempRadius] = useState(2000); // for slider UI only
+  const [radius, setRadius] = useState(2000); // for API fetch
   const [position, setPosition] = useState(null);
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(null);
@@ -16,14 +20,12 @@ function App() {
 
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
-  // -------- LOGOUT FUNCTION --------
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
   };
 
-  // -------- GET USER LOCATION --------
   useEffect(() => {
     if (!user) return;
 
@@ -45,26 +47,36 @@ function App() {
     );
   }, [user]);
 
-  // -------- FETCH WEATHER FORECAST --------
   useEffect(() => {
-    if (!position) return;
+    if (!user || !position || !radius) return;
 
-    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${position.lat}&lon=${position.lon}&appid=${apiKey}&units=metric`;
+    const surrounding = generateSurroundingCoordinates(position, radius, 8);
+    const allCoords = [position, ...surrounding];
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        console.log('Forecast data:', data);
-        setForecast(data.list);
-      })
-      .catch(err => console.error('Fetch error:', err));
-  }, [user, position, apiKey]);
+    async function fetchForecasts() {
+      try {
+        const responses = await Promise.all(
+          allCoords.map(coord =>
+            fetch(
+              `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}&units=metric`
+            ).then(res => res.json())
+          )
+        );
+
+        const mergedForecasts = responses.flatMap(res => res.list);
+        setForecast(mergedForecasts);
+      } catch (err) {
+        console.error('Fetch error:', err);
+      }
+    }
+
+    fetchForecasts();
+  }, [user, position, radius, apiKey]);
 
   if (!user) {
     return <AuthForm onAuthSuccess={setUser} />;
   }
 
-  // -------- GROUP FORECAST BY DAY --------
   function groupForecastByDay(forecastList) {
     const days = {};
     forecastList.forEach(entry => {
@@ -79,16 +91,16 @@ function App() {
 
   if (error) {
     return (
-      <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
+      <div className="app" style={{ fontFamily: 'Arial' }}>
         <h1>Management of Environmental Phenomena and Natural Disasters</h1>
-        <p style={{ color: 'red' }}>{error}</p>
+        <p className="error-message">{error}</p>
       </div>
     );
   }
 
   if (!position || !forecast) {
     return (
-      <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
+      <div className="app" style={{ fontFamily: 'Arial' }}>
         <h1>Management of Environmental Phenomena and Natural Disasters</h1>
         <p>Loading location and weather data...</p>
       </div>
@@ -96,14 +108,11 @@ function App() {
   }
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
+    <div className="app" style={{ fontFamily: 'Arial' }}>
       <h1>Management of Environmental Phenomena and Natural Disasters</h1>
 
       {user && (
-        <button
-          onClick={() => setShowLogoutModal(true)}
-          style={{ marginBottom: '1rem' }}
-        >
+        <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>
           Logout
         </button>
       )}
@@ -118,8 +127,29 @@ function App() {
         />
       )}
 
+      <div
+        className="slider-container"
+        style={{ marginBottom: '1rem', width: '100%' }}
+      >
+        <label htmlFor="radius-slider">
+          Forecast Radius: {Math.round(tempRadius / 1000)} km
+        </label>
+        <input
+          id="radius-slider"
+          type="range"
+          min="2000"
+          max="30000"
+          step="1000"
+          value={tempRadius}
+          onChange={e => setTempRadius(Number(e.target.value))}
+          onMouseUp={() => setRadius(tempRadius)}
+          onTouchEnd={() => setRadius(tempRadius)}
+          style={{ width: '100%' }}
+        />
+      </div>
+
       <div className="map">
-        <Map position={position} />
+        <Map position={position} radius={radius} />
       </div>
 
       <div className="forecast-container">
@@ -167,6 +197,8 @@ function App() {
           );
         })}
       </div>
+
+      <Footer />
     </div>
   );
 }

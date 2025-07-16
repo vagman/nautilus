@@ -1,19 +1,23 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Circle } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
-export default function Map({ position }) {
+export default function Map({ position, radius = 2000 }) {
   return (
     <MapContainer
-      center={[position.lat, position.lon]}
-      zoom={13}
+      center={position}
+      zoom={12}
       style={{ height: '400px', width: '100%' }}
     >
       <TileLayer
-        attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution="&copy; OpenStreetMap contributors"
       />
-      <Marker position={[position.lat, position.lon]}>
-        <Popup>Your Location</Popup>
-      </Marker>
+      <Marker position={position} />
+      <Circle
+        center={position}
+        radius={radius}
+        pathOptions={{ fillColor: 'rgba(0, 123, 255, 0.3)', color: '#007bff' }}
+      />
     </MapContainer>
   );
 }
