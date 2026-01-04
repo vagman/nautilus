@@ -1,6 +1,4 @@
-import './LogoutModal.css';
-
-export default function LogoutModal({ onCancel, onConfirm }) {
+function LogoutModal({ onCancel, onConfirm }) {
   return (
     <div className="modal-overlay">
       <div className="modal">
@@ -18,3 +16,5 @@ export default function LogoutModal({ onCancel, onConfirm }) {
     </div>
   );
 }
+
+export default LogoutModal;

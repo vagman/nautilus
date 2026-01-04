@@ -1,22 +1,35 @@
-import { useEffect, useState } from 'react';
-import Map from './components/Map';
-import './App.css';
-import AuthForm from './components/AuthForm';
-import LogoutModal from './components/LogoutModal';
-import { generateSurroundingCoordinates } from './utils/generateSurroundingCoordinates';
-import Footer from './components/Footer';
+import { useState, useEffect } from 'react';
+
+// Components
+import Map from './Map.jsx';
+import AuthForm from './AuthForm.jsx';
+import LogoutModal from './LogoutModal.jsx';
+import Footer from './Footer.jsx';
+import { generateSurroundingCoordinates } from '../utils/generateSurroundingCoordinates.js';
+
+// Hooks
+import { useGeolocation } from '../hooks/useGeolocation';
 
 function App() {
-  const [tempRadius, setTempRadius] = useState(2000); // for slider UI only
-  const [radius, setRadius] = useState(2000); // for API fetch
-  const [position, setPosition] = useState(null);
+  const [tempRadius, setTempRadius] = useState(2000);
+  const [radius, setRadius] = useState(2000);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [forecast, setForecast] = useState(null);
-  const [error, setError] = useState(null);
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  // Custom Hook for Geolocation
+  const {
+    position,
+    isLoading: isLoadingGeo,
+    error: geoError,
+  } = useGeolocation();
+
+  // Combine API errors (if any) with Geolocation errors
+  const [fetchError, setFetchError] = useState(null);
+  const error = geoError || fetchError;
 
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
@@ -26,27 +39,7 @@ function App() {
     setUser(null);
   };
 
-  useEffect(() => {
-    if (!user) return;
-
-    if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser');
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      pos => {
-        setPosition({
-          lat: pos.coords.latitude,
-          lon: pos.coords.longitude,
-        });
-      },
-      () => {
-        setError('Unable to retrieve your location');
-      }
-    );
-  }, [user]);
-
+  // Weather Fetch Effect
   useEffect(() => {
     if (!user || !position || !radius) return;
 
@@ -55,11 +48,15 @@ function App() {
 
     async function fetchForecasts() {
       try {
+        setFetchError(null);
         const responses = await Promise.all(
           allCoords.map(coord =>
             fetch(
               `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}&units=metric`
-            ).then(res => res.json())
+            ).then(res => {
+              if (!res.ok) throw new Error('Failed to fetch weather data');
+              return res.json();
+            })
           )
         );
 
@@ -67,6 +64,7 @@ function App() {
         setForecast(mergedForecasts);
       } catch (err) {
         console.error('Fetch error:', err);
+        setFetchError(err.message);
       }
     }
 
@@ -78,29 +76,30 @@ function App() {
   }
 
   function groupForecastByDay(forecastList) {
+    if (!forecastList) return [];
     const days = {};
     forecastList.forEach(entry => {
       const date = entry.dt_txt.split(' ')[0];
-      if (!days[date]) {
-        days[date] = [];
-      }
+      if (!days[date]) days[date] = [];
       days[date].push(entry);
     });
     return Object.entries(days).slice(0, 5);
   }
 
+  // Handle Errors
   if (error) {
     return (
-      <div className="app" style={{ fontFamily: 'Arial' }}>
+      <div className="app">
         <h1>Management of Environmental Phenomena and Natural Disasters</h1>
-        <p className="error-message">{error}</p>
+        <p className="error-message">Error: {error}</p>
       </div>
     );
   }
 
-  if (!position || !forecast) {
+  // Handle Loading (Wait for Position OR Forecast)
+  if (isLoadingGeo || (!forecast && !error)) {
     return (
-      <div className="app" style={{ fontFamily: 'Arial' }}>
+      <div className="app">
         <h1>Management of Environmental Phenomena and Natural Disasters</h1>
         <p>Loading location and weather data...</p>
       </div>
@@ -108,7 +107,7 @@ function App() {
   }
 
   return (
-    <div className="app" style={{ fontFamily: 'Arial' }}>
+    <div className="app">
       <h1>Management of Environmental Phenomena and Natural Disasters</h1>
 
       {user && (
@@ -144,7 +143,6 @@ function App() {
           onChange={e => setTempRadius(Number(e.target.value))}
           onMouseUp={() => setRadius(tempRadius)}
           onTouchEnd={() => setRadius(tempRadius)}
-          style={{ width: '100%' }}
         />
       </div>
 

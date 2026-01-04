@@ -1,10 +1,9 @@
-// AuthForm.jsx
 import { useState } from 'react';
-import './AuthForm.css';
+
 import nautilusLightLogo from '../assets/nautilus-white-bg.png';
 import nautilusDarkLogo from '../assets/nautilus.png';
 
-export default function AuthForm({ onAuthSuccess }) {
+function AuthForm({ onAuthSuccess }) {
   const [mode, setMode] = useState('login');
   const [formData, setFormData] = useState({
     username: '',
@@ -20,12 +19,12 @@ export default function AuthForm({ onAuthSuccess }) {
     setError(null);
   };
 
-  const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = event => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleSubmit = async event => {
+    event.preventDefault();
     setError(null);
 
     try {
@@ -125,3 +124,5 @@ export default function AuthForm({ onAuthSuccess }) {
     </div>
   );
 }
+
+export default AuthForm;
