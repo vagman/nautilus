@@ -1,22 +1,38 @@
 /* =========================================
-   1. VARIABLES & RESET (from index.css)
+   1. GLOBAL VARIABLES & RESET
    ========================================= */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+
+  /* DEFAULT (Light Mode) COLORS */
+  --bg-primary: #f0f2f5;
+  --bg-card: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --border-color: #ddd;
+  --accent-color: #646cff;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* DARK MODE VARIABLES (Applied when body has .dark class) */
+body.dark {
+  --bg-primary: #1a1a1a;
+  --bg-card: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --border-color: #444;
+}
+
 /* Global Link Styles */
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--accent-color);
   text-decoration: inherit;
 }
 a:hover {
@@ -31,33 +47,36 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--bg-card); /* Adapted to theme */
+  color: var(--text-primary); /* Adapted to theme */
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.3s, color 0.3s;
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: var(--accent-color);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
 /* =========================================
-   2. MAIN LAYOUT (Merged App.css & Body)
+   2. MAIN LAYOUT
    ========================================= */
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
-  /* Use App.css background as default, usually overrides generic dark mode */
-  background-color: #f0f2f5;
-  color: #333;
+  background-color: var(--bg-primary); /* Uses variable */
+  color: var(--text-primary); /* Uses variable */
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Aligns content to top, better for scrolling apps */
+  align-items: flex-start;
   padding: 1rem;
   box-sizing: border-box;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 /* Main App Container */
@@ -65,7 +84,7 @@ body {
   padding: 2rem;
   max-width: 800px;
   width: 100%;
-  background-color: white;
+  background-color: var(--bg-card); /* Uses variable */
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
@@ -96,6 +115,10 @@ h1 {
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+/* Optional: Invert map in dark mode to reduce glare */
+body.dark .map {
+  filter: invert(90%) hue-rotate(180deg);
+}
 
 /* --- Forecast --- */
 .forecast-container {
@@ -106,16 +129,17 @@ h1 {
 .forecast-day {
   margin-bottom: 1.5rem;
   padding: 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color); /* Uses variable */
   border-radius: 8px;
-  background-color: #fff;
+  background-color: var(--bg-card); /* Uses variable */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
+  color: var(--text-primary); /* Uses variable */
 }
 
 .forecast-day h3 {
   margin-top: 0;
-  color: #444;
+  color: var(--text-primary); /* Uses variable */
   font-size: 1.2rem;
 }
 
@@ -137,7 +161,7 @@ h1 {
   border: none;
   border-radius: 6px;
   font-weight: bold;
-  color: black;
+  color: black !important; /* Force black text on yellow button */
   transition: background-color 0.3s ease;
 }
 
@@ -157,7 +181,7 @@ h1 {
 }
 
 .error-message {
-  color: red;
+  color: #ff8080;
 }
 
 /* --- Auth Form (Login/Signup) --- */
@@ -166,23 +190,25 @@ h1 {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  width: 100vw; /* Full viewport for login screen */
+  width: 100vw;
   padding: 2rem;
   gap: 2rem;
+  /* Default Light Gradient */
   background: linear-gradient(135deg, #e8f0f8, #c9d6ff);
   font-family: 'Arial', sans-serif;
   flex-wrap: wrap;
   box-sizing: border-box;
   transition: background 0.3s ease;
-  /* Override body padding/margin for this specific full-screen view */
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
+  color: #333; /* Explicitly dark text for light mode auth */
 }
 
+/* Dark Mode Auth Override */
 .auth-container.dark {
-  background: linear-gradient(135deg, #1e1e2f, #3a3a60);
+  background: linear-gradient(135deg, #1e1e2f, #3a3a60) !important;
   color: #eee;
 }
 
@@ -309,6 +335,7 @@ h1 {
 .theme-toggle.dark {
   background: #ffffff22;
   color: #fff;
+  border: 1px solid #ffffff55;
 }
 
 .error {
@@ -332,7 +359,8 @@ h1 {
 }
 
 .modal {
-  background-color: white;
+  background-color: var(--bg-card); /* Uses variable */
+  color: var(--text-primary); /* Uses variable */
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
@@ -362,6 +390,7 @@ h1 {
 
 .cancel-btn {
   background-color: #ccc;
+  color: #333;
 }
 
 .confirm-btn {
@@ -385,8 +414,8 @@ h1 {
   text-align: center;
   padding: 1rem;
   font-size: 0.9rem;
-  color: #666;
-  border-top: 1px solid #ccc;
+  color: var(--text-secondary); /* Uses variable */
+  border-top: 1px solid var(--border-color);
   margin-top: 2rem;
   width: 100%;
 }
@@ -460,19 +489,5 @@ h1 {
   }
   .forecast-day li {
     font-size: 0.9rem;
-  }
-}
-
-/* Light Theme Preference (from index.css) */
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
   }
 }

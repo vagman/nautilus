@@ -1,0 +1,100 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  /* Use Global Variables (defined in src/style.css) */
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s ease-in-out;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+}
+
+.open {
+  left: 0 !important; /* Force open state */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.sidebarHeader {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0;
+}
+
+.userInfo {
+  padding: 1.5rem;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.sidebarMenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuItem {
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s;
+}
+
+.menuItem:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.menuLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.submenu {
+  list-style: none;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 4px 8px -4px rgba(0, 0, 0, 0.1);
+}
+
+.submenu li {
+  padding: 1rem 1.5rem 1rem 2.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.submenu li:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #646cff;
+}
+
+.sidebarOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+  z-index: 1999;
+}

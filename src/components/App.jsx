@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 
-// Components
+import Sidebar from './Sidebar';
 import Map from './Map.jsx';
 import AuthForm from './AuthForm.jsx';
 import LogoutModal from './LogoutModal.jsx';
 import Footer from './Footer.jsx';
 import { generateSurroundingCoordinates } from '../utils/generateSurroundingCoordinates.js';
 
-// Hooks
 import { useGeolocation } from '../hooks/useGeolocation';
 
 function App() {
@@ -15,6 +14,9 @@ function App() {
   const [radius, setRadius] = useState(2000);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [forecast, setForecast] = useState(null);
+
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
@@ -37,6 +39,7 @@ function App() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
+    setForecast(null); // Clear data on logout
   };
 
   // Weather Fetch Effect
@@ -71,10 +74,6 @@ function App() {
     fetchForecasts();
   }, [user, position, radius, apiKey]);
 
-  if (!user) {
-    return <AuthForm onAuthSuccess={setUser} />;
-  }
-
   function groupForecastByDay(forecastList) {
     if (!forecastList) return [];
     const days = {};
@@ -86,35 +85,126 @@ function App() {
     return Object.entries(days).slice(0, 5);
   }
 
-  // Handle Errors
+  // --- RENDER LOGIC ---
+  // 1. If NOT logged in, show AuthForm
+  if (!user) {
+    return <AuthForm onAuthSuccess={setUser} />;
+  }
+
+  // 2. If logged in but Error exists
   if (error) {
     return (
       <div className="app">
+        <Sidebar
+          isOpen={isSidebarOpen}
+          toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
+          user={user}
+        />
+        {/* Hamburger Button */}
+        <button
+          className="toggle-menu-btn"
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '20px',
+            zIndex: 1000,
+            fontSize: '1.5rem',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: 'var(--text-primary)',
+          }}
+          onClick={() => setSidebarOpen(true)}
+        >
+          ☰
+        </button>
+
         <h1>Management of Environmental Phenomena and Natural Disasters</h1>
         <p className="error-message">Error: {error}</p>
+        <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>
+          Logout
+        </button>
+        {showLogoutModal && (
+          <LogoutModal
+            onConfirm={() => {
+              logout();
+              setShowLogoutModal(false);
+            }}
+            onCancel={() => setShowLogoutModal(false)}
+          />
+        )}
       </div>
     );
   }
 
-  // Handle Loading (Wait for Position OR Forecast)
+  // 3. If logged in but Loading
   if (isLoadingGeo || (!forecast && !error)) {
     return (
       <div className="app">
+        <Sidebar
+          isOpen={isSidebarOpen}
+          toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
+          user={user}
+        />
+        {/* Hamburger Button */}
+        <button
+          className="toggle-menu-btn"
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '20px',
+            zIndex: 1000,
+            fontSize: '1.5rem',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: 'var(--text-primary)',
+          }}
+          onClick={() => setSidebarOpen(true)}
+        >
+          ☰
+        </button>
         <h1>Management of Environmental Phenomena and Natural Disasters</h1>
         <p>Loading location and weather data...</p>
       </div>
     );
   }
 
+  // 4. MAIN DASHBOARD (Logged in + Data Loaded)
   return (
     <div className="app">
+      {/* Sidebar Component */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
+        user={user}
+      />
+
+      {/* Hamburger Menu Button */}
+      <button
+        className="toggle-menu-btn"
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          zIndex: 1000,
+          fontSize: '2rem',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          color: 'var(--text-primary)', // Uses theme color
+        }}
+        onClick={() => setSidebarOpen(true)}
+      >
+        ☰
+      </button>
+
       <h1>Management of Environmental Phenomena and Natural Disasters</h1>
 
-      {user && (
-        <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>
-          Logout
-        </button>
-      )}
+      {/* Logout Button (Kept for now, though you might move this to Sidebar later) */}
+      <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>
+        Logout
+      </button>
 
       {showLogoutModal && (
         <LogoutModal
