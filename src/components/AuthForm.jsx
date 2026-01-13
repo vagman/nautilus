@@ -58,8 +58,11 @@ function AuthForm({ onAuthSuccess }) {
           Receive real-time alerts for natural disasters and extreme weather
           phenomena in your area.
         </p>
-        <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>
-          {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+        <button
+          className={`theme-toggle ${darkMode ? 'dark' : ''}`}
+          onClick={() => setDarkMode(!darkMode)}
+        >
+          {darkMode ? '💡 Light Mode' : '🌙 Dark Mode'}
         </button>
       </div>
 

@@ -16,15 +16,15 @@ export function useGeolocation() {
     if (!browserSupportsGeolocation) return;
 
     navigator.geolocation.getCurrentPosition(
-      pos => {
+      position => {
         setPosition({
-          lat: pos.coords.latitude,
-          lon: pos.coords.longitude,
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
         });
         setIsLoading(false);
       },
-      err => {
-        setError(err.message);
+      error => {
+        setError(error.message);
         setIsLoading(false);
       }
     );
