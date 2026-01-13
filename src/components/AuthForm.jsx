@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '../hooks/useThemes.jsx';
 
 import nautilusLightLogo from '../assets/nautilus-white-bg.png';
 import nautilusDarkLogo from '../assets/nautilus.png';
@@ -12,7 +13,7 @@ function AuthForm({ onAuthSuccess }) {
   });
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleTheme } = useTheme();
 
   const switchMode = () => {
     setMode(mode === 'login' ? 'signup' : 'login');
@@ -60,7 +61,7 @@ function AuthForm({ onAuthSuccess }) {
         </p>
         <button
           className={`theme-toggle ${darkMode ? 'dark' : ''}`}
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={toggleTheme}
         >
           {darkMode ? '💡 Light Mode' : '🌙 Dark Mode'}
         </button>
