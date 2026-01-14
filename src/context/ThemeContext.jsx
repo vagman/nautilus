@@ -29,9 +29,9 @@ export function ThemeProvider({ children }) {
 
     // A. Update the Body class (Controls global CSS)
     if (darkMode) {
-      document.body.classList.add('dark');
+      document.documentElement.classList.add('dark');
     } else {
-      document.body.classList.remove('dark');
+      document.documentElement.classList.remove('dark');
     }
 
     // B. Save to LocalStorage (Persist on refresh)
