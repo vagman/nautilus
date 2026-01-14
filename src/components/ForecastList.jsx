@@ -1,5 +1,3 @@
-import React from 'react';
-
 function ForecastList({ forecast }) {
   function groupForecastByDay(forecastList) {
     if (!forecastList) return [];

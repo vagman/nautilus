@@ -1,5 +1,3 @@
-import React from 'react';
-
 function PageTitle({ children, className = '' }) {
   return (
     <h1

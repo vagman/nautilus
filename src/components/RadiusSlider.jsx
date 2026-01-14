@@ -1,5 +1,3 @@
-import React from 'react';
-
 function RadiusSlider({ value, onChange, onFinalChange }) {
   return (
     <div className="w-full max-w-3xl mb-6 bg-white dark:bg-[#2d2d2d] p-4 rounded-lg shadow-md transition-colors">
