@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(100) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   theme_preference VARCHAR(10) DEFAULT 'light',
+  language_preference VARCHAR(5) DEFAULT 'en',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -16,8 +16,6 @@ app.use(cors());
 app.use(express.json());
 
 // --- ROUTES ---
-
-// 1. SIGNUP ROUTE
 app.post('/signup', async (request, response) => {
   try {
     const { username, email, password } = request.body;
@@ -32,10 +30,9 @@ app.post('/signup', async (request, response) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // ✅ FIXED: Added 'language_preference' to RETURNING clause
     const newUser = await query(
       'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id, username, email, theme_preference, language_preference',
-      [username, email, hashedPassword]
+      [username, email, hashedPassword],
     );
 
     const token = jwt.sign({ id: newUser.rows[0].id }, SECRET_KEY, {
@@ -68,7 +65,6 @@ app.post('/login', async (request, response) => {
 
     const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: '1h' });
 
-    // ✅ FIXED: Included 'language_preference' in the response
     response.json({
       token,
       user: {
@@ -76,7 +72,7 @@ app.post('/login', async (request, response) => {
         username: user.username,
         email: user.email,
         theme_preference: user.theme_preference,
-        language_preference: user.language_preference, // <--- Sent to frontend
+        language_preference: user.language_preference,
       },
     });
   } catch (error) {
@@ -85,7 +81,6 @@ app.post('/login', async (request, response) => {
   }
 });
 
-// 3. UPDATE THEME ROUTE
 app.put('/users/:id/theme', async (request, response) => {
   try {
     const { id } = request.params;
@@ -93,7 +88,7 @@ app.put('/users/:id/theme', async (request, response) => {
 
     const result = await query(
       'UPDATE users SET theme_preference = $1 WHERE id = $2 RETURNING id, theme_preference',
-      [theme, id]
+      [theme, id],
     );
 
     if (result.rows.length === 0) {
@@ -107,16 +102,14 @@ app.put('/users/:id/theme', async (request, response) => {
   }
 });
 
-// 4. ✅ NEW: UPDATE LANGUAGE ROUTE
 app.put('/api/users/:id/language', async (request, response) => {
   try {
     const { id } = request.params;
     const { language } = request.body; // Expects "en" or "el"
 
-    // Update DB and return the new value
     const result = await query(
       'UPDATE users SET language_preference = $1 WHERE id = $2 RETURNING id, language_preference',
-      [language, id]
+      [language, id],
     );
 
     if (result.rows.length === 0) {
@@ -130,7 +123,7 @@ app.put('/api/users/:id/language', async (request, response) => {
   }
 });
 
-// 5. DELETE USER ROUTE
+
 app.delete('/api/users/:id', async (request, response) => {
   try {
     const { id } = request.params;
@@ -149,7 +142,6 @@ app.delete('/api/users/:id', async (request, response) => {
   }
 });
 
-// Test Route
 app.get('/test-db', async (request, response) => {
   try {
     const result = await query('SELECT NOW()');
