@@ -1,0 +1,87 @@
+{
+  "auth": {
+    "welcome": "Welcome Back",
+    "appDescription": "Your advanced dashboard for real-time weather monitoring and environmental safety. Stay informed with precise forecasts and timely alerts.",
+    "loginTitle": "Login to your account",
+    "signupTitle": "Create an account",
+    "usernameLabel": "Username",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "loginBtn": "Sign In",
+    "signupBtn": "Sign Up",
+    "switchToSignup": "Don't have an account? Sign Up",
+    "switchToLogin": "Already have an account? Login",
+    "language": "Language",
+    "invalidCredentials": "Invalid credentials"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "deleting": "Deleting...",
+    "error": "Error",
+    "appTitle": "Management of Environmental Phenomena and Natural Disasters",
+    "loading": "Loading location and weather data..."
+  },
+  "deleteAccount": {
+    "title": "⚠️ Delete Account",
+    "confirmation": "Are you sure you want to delete your account?",
+    "warningTitle": "Warning: This action cannot be undone.",
+    "warningText": "All your data, settings, and preferences will be permanently removed from our database.",
+    "confirmButton": "Yes, Delete My Account"
+  },
+  "footer": {
+    "providedBy": "Weather data provided for free by"
+  },
+  "help": {
+    "title": "❓ Help Center",
+    "close": "Close",
+    "q1": "What is this app used for?",
+    "a1": "Nautilus is a comprehensive dashboard designed for monitoring environmental phenomena and natural disasters. It allows users to visualize weather patterns, track storms in real-time using an interactive map, and receive clothing or safety recommendations based on forecast data.",
+    "q2": "Where can I contact for help?",
+    "a2_prefix": "For technical support or feature requests, please email our support team at",
+    "q3": "How does the radius slider work?",
+    "a3": "The radius slider adjusts the area of interest around your current location. The app calculates weather data for multiple points along the edge of this circle to give you a more accurate 'surrounding' forecast, rather than just a single point prediction."
+  },
+  "about": {
+    "title": "About Nautilus",
+    "description": "Nautilus is an advanced environmental monitoring dashboard designed to provide real-time weather data and natural disaster alerts. Built as part of a thesis project, it leverages geolocation and open weather APIs to ensure user safety through timely forecasts.",
+    "developer": "Developer",
+    "license": "License",
+    "stack": "Stack",
+    "build": "Build",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "github": "GitHub Repo",
+    "rights": "All rights and lefts reserved.",
+    "unauthorized": "Unauthorized duplication or distribution of this software is strictly prohibited."
+  },
+  "logout": {
+    "title": "Confirm Logout",
+    "message": "Are you sure you want to log out?",
+    "confirm": "Logout",
+    "cancel": "Cancel"
+  },
+  "forecast": {
+    "title": "🗓️ 5-Day Weather Forecast",
+    "radiusLabel": "Forecast Radius",
+    "min": "Min",
+    "max": "Max",
+    "adviceTitle": "👕 What to Wear / Prepare For:",
+    "heat": "🔥 Very hot — wear light clothes, drink water, avoid sun",
+    "rain": "☔ Rain expected — bring umbrella or raincoat",
+    "wind": "💨 Windy — consider a windbreaker",
+    "sunny": "🧢 Sunny — wear a hat, sunglasses, and sunscreen",
+    "cold": "🧥 Cold — bring a jacket or coat",
+    "mild": "🙂 Mild weather — dress comfortably"
+  },
+  "sidebar": {
+    "menu": "Menu",
+    "settings": "Settings",
+    "themeLight": "Switch to Light",
+    "themeDark": "Switch to Dark",
+    "language": "Language",
+    "deleteAccount": "Delete Account",
+    "volunteer": "Volunteer",
+    "help": "Help",
+    "about": "About"
+  }
+}

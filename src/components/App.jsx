@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next'; // 1. Import Hook
 
-// Components
 import DashboardLayout from './DashboardLayout';
 import PageTitle from './PageTitle';
 import LoadingSpinner from './LoadingSpinner';
@@ -9,20 +9,23 @@ import LogoutButton from './LogoutButton';
 import RadiusSlider from './RadiusSlider';
 import ForecastList from './ForecastList';
 import Map from './Map';
-import AuthForm from './AuthForm';
 import LogoutModal from './LogoutModal';
 import Footer from './Footer';
+import AuthForm from './AuthForm';
+import DeleteAccountModal from './DeleteAccountModal';
 
-// Logic
 import { generateSurroundingCoordinates } from '../utils/generateSurroundingCoordinates';
+
 import { useGeolocation } from '../hooks/useGeolocation';
 import { useTheme } from '../context/ThemeContext';
 
 function App() {
-  // --- STATE ---
+  const { t } = useTranslation(); // 2. Init Hook
   const [tempRadius, setTempRadius] = useState(2000);
   const [radius, setRadius] = useState(2000);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [forecast, setForecast] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -40,10 +43,8 @@ function App() {
   } = useGeolocation();
   const [fetchError, setFetchError] = useState(null);
   const error = geoError || fetchError;
-
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
-  // --- HANDLERS ---
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -52,42 +53,71 @@ function App() {
     clearUserThemeSync();
   };
 
-  // --- EFFECTS ---
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/users/${user.id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to delete account');
+      }
+
+      setShowDeleteModal(false);
+      logout();
+    } catch (err) {
+      console.error('Delete Error:', err);
+      alert('Error deleting account: ' + err.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   useEffect(() => {
     if (!user || !position || !radius) return;
-
     const surrounding = generateSurroundingCoordinates(position, radius, 8);
     const allCoords = [position, ...surrounding];
-
     async function fetchForecasts() {
       try {
         setFetchError(null);
         const responses = await Promise.all(
           allCoords.map(coord =>
             fetch(
-              `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}&units=metric`
+              `https://api.openweathermap.org/data/2.5/forecast?lat=${coord.lat}&lon=${coord.lon}&appid=${apiKey}&units=metric`,
             ).then(res => {
-              if (!res.ok) throw new Error('Failed to fetch weather data');
+              if (!res.ok) throw new Error('Failed');
               return res.json();
-            })
-          )
+            }),
+          ),
         );
         const mergedForecasts = responses.flatMap(res => res.list);
         setForecast(mergedForecasts);
       } catch (err) {
-        console.error('Fetch error:', err);
         setFetchError(err.message);
       }
     }
     fetchForecasts();
   }, [user, position, radius, apiKey]);
 
-  // --- RENDER ---
-  // 1. Auth View
   if (!user) return <AuthForm onAuthSuccess={setUser} />;
 
-  // Props shared across all Dashboard states
-  const layoutProps = { user, isSidebarOpen, setSidebarOpen };
+  const layoutProps = {
+    user,
+    isSidebarOpen,
+    setSidebarOpen,
+    onRequestDelete: () => setShowDeleteModal(true),
+  };
+
   const modalProps = {
     onConfirm: () => {
       logout();
@@ -96,11 +126,10 @@ function App() {
     onCancel: () => setShowLogoutModal(false),
   };
 
-  // 2. Error View
   if (error) {
     return (
       <DashboardLayout {...layoutProps}>
-        <PageTitle>Management of Environmental Phenomena</PageTitle>
+        <PageTitle>{t('common.appTitle')}</PageTitle>
         <ErrorMessage message={error} />
         <LogoutButton onClick={() => setShowLogoutModal(true)} />
         {showLogoutModal && <LogoutModal {...modalProps} />}
@@ -108,26 +137,31 @@ function App() {
     );
   }
 
-  // 3. Loading View
   if (isLoadingGeo || (!forecast && !error)) {
     return (
       <DashboardLayout {...layoutProps}>
-        <PageTitle>Management of Environmental Phenomena</PageTitle>
-        <LoadingSpinner message="Loading location and weather data..." />
+        <PageTitle>{t('common.appTitle')}</PageTitle>
+        <LoadingSpinner message={t('common.loading')} />
       </DashboardLayout>
     );
   }
 
-  // 4. Main Dashboard View
   return (
     <DashboardLayout {...layoutProps}>
-      <PageTitle className="leading-tight">
-        Management of Environmental Phenomena and Natural Disasters
-      </PageTitle>
+      {/* ✅ Translated Title */}
+      <PageTitle className="leading-tight">{t('common.appTitle')}</PageTitle>
 
       <LogoutButton onClick={() => setShowLogoutModal(true)} />
 
       {showLogoutModal && <LogoutModal {...modalProps} />}
+      {showDeleteModal && (
+        <DeleteAccountModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleDeleteAccount}
+          isDeleting={isDeleting}
+        />
+      )}
 
       <RadiusSlider
         value={tempRadius}
@@ -135,7 +169,9 @@ function App() {
         onFinalChange={setRadius}
       />
 
-      <Map position={position} radius={radius} />
+      <div className="w-full max-w-4xl h-[400px] rounded-xl overflow-hidden shadow-lg border-4 border-white dark:border-[#444] mb-8 z-0 relative">
+        <Map position={position} radius={radius} />
+      </div>
 
       <ForecastList forecast={forecast} />
 

@@ -6,5 +6,5 @@ export async function fetchNearbyWeather(lat, lon, count = 30) {
   const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to fetch weather data');
   const data = await res.json();
-  return data.list; // array of weather points
+  return data.list;
 }

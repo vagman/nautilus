@@ -22,7 +22,6 @@ app.post('/signup', async (request, response) => {
   try {
     const { username, email, password } = request.body;
 
-    // 1. Check if user already exists
     const userCheck = await query('SELECT * FROM users WHERE email = $1', [
       email,
     ]);
@@ -30,18 +29,15 @@ app.post('/signup', async (request, response) => {
       return response.status(400).json({ error: 'User already exists' });
     }
 
-    // 2. Encrypt the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // 3. Insert into Database
-    // We added theme_preference to the RETURNING clause
+    // ✅ FIXED: Added 'language_preference' to RETURNING clause
     const newUser = await query(
-      'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id, username, email, theme_preference',
+      'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id, username, email, theme_preference, language_preference',
       [username, email, hashedPassword]
     );
 
-    // 4. Generate Token
     const token = jwt.sign({ id: newUser.rows[0].id }, SECRET_KEY, {
       expiresIn: '1h',
     });
@@ -58,7 +54,6 @@ app.post('/login', async (request, response) => {
   try {
     const { email, password } = request.body;
 
-    // 1. Find user
     const result = await query('SELECT * FROM users WHERE email = $1', [email]);
     if (result.rows.length === 0) {
       return response.status(400).json({ error: 'User not found' });
@@ -66,23 +61,22 @@ app.post('/login', async (request, response) => {
 
     const user = result.rows[0];
 
-    // 2. Check Password
     const validPassword = await bcrypt.compare(password, user.password_hash);
     if (!validPassword) {
       return response.status(400).json({ error: 'Invalid password' });
     }
 
-    // 3. Generate Token
     const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: '1h' });
 
-    // Respond with the theme preference so the frontend can sync immediately
+    // ✅ FIXED: Included 'language_preference' in the response
     response.json({
       token,
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
-        theme_preference: user.theme_preference, // <--- ADDED THIS
+        theme_preference: user.theme_preference,
+        language_preference: user.language_preference, // <--- Sent to frontend
       },
     });
   } catch (error) {
@@ -91,11 +85,11 @@ app.post('/login', async (request, response) => {
   }
 });
 
-// 3. UPDATE THEME ROUTE (New)
+// 3. UPDATE THEME ROUTE
 app.put('/users/:id/theme', async (request, response) => {
   try {
     const { id } = request.params;
-    const { theme } = request.body; // Expects "light" or "dark"
+    const { theme } = request.body;
 
     const result = await query(
       'UPDATE users SET theme_preference = $1 WHERE id = $2 RETURNING id, theme_preference',
@@ -110,6 +104,48 @@ app.put('/users/:id/theme', async (request, response) => {
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: 'Failed to update theme' });
+  }
+});
+
+// 4. ✅ NEW: UPDATE LANGUAGE ROUTE
+app.put('/api/users/:id/language', async (request, response) => {
+  try {
+    const { id } = request.params;
+    const { language } = request.body; // Expects "en" or "el"
+
+    // Update DB and return the new value
+    const result = await query(
+      'UPDATE users SET language_preference = $1 WHERE id = $2 RETURNING id, language_preference',
+      [language, id]
+    );
+
+    if (result.rows.length === 0) {
+      return response.status(404).json({ error: 'User not found' });
+    }
+
+    response.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: 'Failed to update language' });
+  }
+});
+
+// 5. DELETE USER ROUTE
+app.delete('/api/users/:id', async (request, response) => {
+  try {
+    const { id } = request.params;
+
+    const checkUser = await query('SELECT * FROM users WHERE id = $1', [id]);
+    if (checkUser.rows.length === 0) {
+      return response.status(404).json({ error: 'User not found' });
+    }
+
+    await query('DELETE FROM users WHERE id = $1', [id]);
+
+    response.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: 'Server error during deletion' });
   }
 });
 

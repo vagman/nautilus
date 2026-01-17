@@ -1,11 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-/* Ensure app takes full height */
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-}
+/* Enable "class-based" Dark Mode 
+   (This replaces 'darkMode: class' from the JS config) 
+*/
+@custom-variant dark (&:where(.dark, .dark *));
