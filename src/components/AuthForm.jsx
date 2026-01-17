@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import ReactCountryFlag from 'react-country-flag';
 import { Sun, Moon, ChevronDown, Check } from 'lucide-react';
+import { authService } from '../services/api'; // ✅ Correct Import
 
-// Assets
 import nautilusWhite from '../assets/nautilus-white.svg';
 import nautilusDark from '../assets/nautilus-dark.svg';
 
@@ -45,31 +45,26 @@ function AuthForm({ onAuthSuccess }) {
     setError('');
     setIsLoading(true);
 
-    const endpoint = isLogin
-      ? 'http://localhost:4000/login'
-      : 'http://localhost:4000/signup';
-
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      let data;
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.error ||
-            t('auth.authenticationFailed') ||
-            'Authentication failed',
-        );
+      // ✅ Use authService instead of raw fetch
+      if (isLogin) {
+        // Login only needs email/password
+        data = await authService.login({
+          email: formData.email,
+          password: formData.password,
+        });
+      } else {
+        // Signup needs everything
+        data = await authService.signup(formData);
       }
 
+      // Save to LocalStorage
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      // Apply saved language preference on login
+      // Apply saved language preference
       if (data.user.language_preference) {
         i18n.changeLanguage(data.user.language_preference);
       }
@@ -77,7 +72,8 @@ function AuthForm({ onAuthSuccess }) {
       onAuthSuccess(data.user);
     } catch (err) {
       console.error(err);
-      setError(err.message);
+      // ✅ Handle errors from the service (which throws the JSON response)
+      setError(err.error || err.message || t('auth.authenticationFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -172,7 +168,6 @@ function AuthForm({ onAuthSuccess }) {
             {t('auth.welcome')}
           </p>
 
-          {/* APP DESCRIPTION */}
           <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs leading-relaxed opacity-90">
             {t('auth.appDescription')}
           </p>

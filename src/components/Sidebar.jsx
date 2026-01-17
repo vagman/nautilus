@@ -3,6 +3,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { Trash2, Globe, Check } from 'lucide-react';
 import ReactCountryFlag from 'react-country-flag';
+import { userService } from '../services/api'; // ✅ Import Service
 
 function Sidebar({
   isOpen,
@@ -17,21 +18,17 @@ function Sidebar({
   const [showSettings, setShowSettings] = useState(false);
 
   const handleLanguageChange = async langCode => {
+    // 1. Change locally immediately for UI speed
     i18n.changeLanguage(langCode);
 
     if (user) {
+      // 2. Update LocalStorage so it persists on reload
       const updatedUser = { ...user, language_preference: langCode };
       localStorage.setItem('user', JSON.stringify(updatedUser));
 
       try {
-        await fetch(`http://localhost:4000/api/users/${user.id}/language`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify({ language: langCode }),
-        });
+        // 3. Sync with Database using the service
+        await userService.updateLanguage(user.id, langCode);
       } catch (err) {
         console.error('Failed to sync language:', err);
       }
@@ -173,13 +170,12 @@ function Sidebar({
                 {i18n.language === 'el' && <Check size={16} />}
               </li>
 
-              {/* ✅ Delete Account - Sidebar stays OPEN now */}
+              {/* Delete Account */}
               <li
                 className="pl-10 p-4 cursor-pointer text-sm border-b border-gray-200 dark:border-[#444] text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors font-medium flex items-center gap-2"
                 onClick={e => {
                   e.stopPropagation();
                   onRequestDelete();
-                  // toggleSidebar();  <-- REMOVED THIS LINE
                 }}
               >
                 <Trash2 size={16} />

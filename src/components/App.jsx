@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next'; // 1. Import Hook
+import { useTranslation } from 'react-i18next';
 
 import DashboardLayout from './DashboardLayout';
 import PageTitle from './PageTitle';
@@ -15,12 +15,12 @@ import AuthForm from './AuthForm';
 import DeleteAccountModal from './DeleteAccountModal';
 
 import { generateSurroundingCoordinates } from '../utils/generateSurroundingCoordinates';
-
 import { useGeolocation } from '../hooks/useGeolocation';
 import { useTheme } from '../context/ThemeContext';
+import { userService } from '../services/api'; // ✅ Import Service
 
 function App() {
-  const { t } = useTranslation(); // 2. Init Hook
+  const { t } = useTranslation();
   const [tempRadius, setTempRadius] = useState(2000);
   const [radius, setRadius] = useState(2000);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -58,26 +58,15 @@ function App() {
     setIsDeleting(true);
 
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/users/${user.id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to delete account');
-      }
+      // ✅ Use Service instead of Fetch
+      await userService.deleteAccount(user.id);
 
       setShowDeleteModal(false);
       logout();
     } catch (err) {
       console.error('Delete Error:', err);
-      alert('Error deleting account: ' + err.message);
+      // Handle the error object returned by api.js
+      alert('Error deleting account: ' + (err.error || err.message));
     } finally {
       setIsDeleting(false);
     }
@@ -87,9 +76,12 @@ function App() {
     if (!user || !position || !radius) return;
     const surrounding = generateSurroundingCoordinates(position, radius, 8);
     const allCoords = [position, ...surrounding];
+
     async function fetchForecasts() {
       try {
         setFetchError(null);
+        // We keep direct fetch here for OpenWeatherMap
+        // because it's an external API, not our backend.
         const responses = await Promise.all(
           allCoords.map(coord =>
             fetch(
@@ -148,7 +140,6 @@ function App() {
 
   return (
     <DashboardLayout {...layoutProps}>
-      {/* ✅ Translated Title */}
       <PageTitle className="leading-tight">{t('common.appTitle')}</PageTitle>
 
       <LogoutButton onClick={() => setShowLogoutModal(true)} />
