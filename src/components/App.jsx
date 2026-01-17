@@ -14,6 +14,10 @@ import Footer from './Footer';
 import AuthForm from './AuthForm';
 import DeleteAccountModal from './DeleteAccountModal';
 
+// ✅ 1. IMPORT THE MISSING MODALS
+import HelpModal from './HelpModal';
+import AboutModal from './AboutModal';
+
 import { generateSurroundingCoordinates } from '../utils/generateSurroundingCoordinates';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { useTheme } from '../context/ThemeContext';
@@ -23,8 +27,13 @@ function App() {
   const { t } = useTranslation();
   const [tempRadius, setTempRadius] = useState(2000);
   const [radius, setRadius] = useState(2000);
+
+  // ✅ 2. ADD STATE FOR NEW MODALS
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [forecast, setForecast] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -103,6 +112,9 @@ function App() {
     isSidebarOpen,
     setSidebarOpen,
     onRequestDelete: () => setShowDeleteModal(true),
+    // ✅ 3. PASS OPEN HANDLERS TO LAYOUT (which passes them to Sidebar)
+    onOpenHelp: () => setShowHelpModal(true),
+    onOpenAbout: () => setShowAboutModal(true),
   };
 
   const modalProps = {
@@ -113,42 +125,15 @@ function App() {
     onCancel: () => setShowLogoutModal(false),
   };
 
-  // Common UI for Error/Loading states
   const TopRightLogout = () => (
     <div className="fixed top-6 right-6 z-50">
       <LogoutButton onClick={() => setShowLogoutModal(true)} />
     </div>
   );
 
-  if (error) {
-    return (
-      <DashboardLayout {...layoutProps}>
-        <TopRightLogout />
-        <PageTitle>{t('common.appTitle')}</PageTitle>
-        <ErrorMessage message={error} />
-        {showLogoutModal && <LogoutModal {...modalProps} />}
-      </DashboardLayout>
-    );
-  }
-
-  if (isLoadingGeo || (!forecast && !error)) {
-    return (
-      <DashboardLayout {...layoutProps}>
-        {/* We generally don't show logout during loading, but we can if you want */}
-        <PageTitle>{t('common.appTitle')}</PageTitle>
-        <LoadingSpinner message={t('common.loading')} />
-      </DashboardLayout>
-    );
-  }
-
-  return (
-    <DashboardLayout {...layoutProps}>
-      {/* ✅ Fixed Position Logout Button */}
-      <TopRightLogout />
-
-      <PageTitle className="leading-tight">{t('common.appTitle')}</PageTitle>
-
-      {/* Modals */}
+  // Helper to keep return statement clean
+  const renderModals = () => (
+    <>
       {showLogoutModal && <LogoutModal {...modalProps} />}
       {showDeleteModal && (
         <DeleteAccountModal
@@ -158,6 +143,42 @@ function App() {
           isDeleting={isDeleting}
         />
       )}
+      {/* ✅ 4. RENDER THE NEW MODALS */}
+      {showHelpModal && <HelpModal onClose={() => setShowHelpModal(false)} />}
+      {showAboutModal && (
+        <AboutModal onClose={() => setShowAboutModal(false)} />
+      )}
+    </>
+  );
+
+  if (error) {
+    return (
+      <DashboardLayout {...layoutProps}>
+        <TopRightLogout />
+        <PageTitle>{t('common.appTitle')}</PageTitle>
+        <ErrorMessage message={error} />
+        {renderModals()}
+      </DashboardLayout>
+    );
+  }
+
+  if (isLoadingGeo || (!forecast && !error)) {
+    return (
+      <DashboardLayout {...layoutProps}>
+        <PageTitle>{t('common.appTitle')}</PageTitle>
+        <LoadingSpinner message={t('common.loading')} />
+      </DashboardLayout>
+    );
+  }
+
+  return (
+    <DashboardLayout {...layoutProps}>
+      <TopRightLogout />
+
+      <PageTitle className="leading-tight">{t('common.appTitle')}</PageTitle>
+
+      {/* Render all modals here */}
+      {renderModals()}
 
       <RadiusSlider
         value={tempRadius}

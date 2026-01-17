@@ -108,22 +108,22 @@ JWT_SECRET=your_super_secret_key
 
 - [x] **Core Features:** Fetch and display weather data & extreme condition alerts.
 - [x] **Authentication:** Secure Login/Signup with Password Hashing & JWT.
-- [x] **Theming:** Global Dark/Light mode with Database persistence.
+- [x] **Theming:** Global Dark/Light mode with Database persistence & UI Sync.
 - [x] **Navigation:** Responsive Sidebar with "Settings" menu & Language toggles.
+- [x] **UI Polish:** Fixed Logout button positioning (Top-Right) & Sidebar interaction.
 - [x] **Architecture (Backend):** Refactored monolithic `index.js` into modular Routes (`auth.js`, `users.js`).
 - [x] **Architecture (Frontend):** Implemented centralized `services/api.js` layer (removed raw fetch calls).
+- [x] **Database:** Standardized `schema.sql` and synchronized user preferences (Language/Theme).
 
 🚧 **Phase 1: UI/UX Refinement**
 
 - [ ] **Profile Management:** Create a **Profile Modal** to allow users to upload, change, or remove their profile picture.
-- [ ] **CSS Modularization:** Convert remaining global styles to `Component.module.css` for better isolation.
-- [ ] **Mobile Responsiveness:** Polish the layout for smaller screens (Sidebar behavior, Modal sizing).
 
 ✨ **Phase 2: Community & Content**
 
 - [ ] **Volunteer Page:** A distinct, dedicated page for community disaster relief volunteering.
-- [ ] **Help & Contact:** Add a support/FAQ section for users.
-- [ ] **About Page:** Project information and mission statement.
+- [x] **Help & Contact:** Add a support/FAQ section for users (Implemented as `HelpModal`).
+- [x] **About Page:** Project information and mission statement (Implemented as `AboutModal`).
 
 🛡️ **Phase 3: Administration & Security (RBAC)**
 
