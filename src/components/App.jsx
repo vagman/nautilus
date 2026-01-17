@@ -17,7 +17,7 @@ import DeleteAccountModal from './DeleteAccountModal';
 import { generateSurroundingCoordinates } from '../utils/generateSurroundingCoordinates';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { useTheme } from '../context/ThemeContext';
-import { userService } from '../services/api'; // ✅ Import Service
+import { userService } from '../services/api';
 
 function App() {
   const { t } = useTranslation();
@@ -58,14 +58,11 @@ function App() {
     setIsDeleting(true);
 
     try {
-      // ✅ Use Service instead of Fetch
       await userService.deleteAccount(user.id);
-
       setShowDeleteModal(false);
       logout();
     } catch (err) {
       console.error('Delete Error:', err);
-      // Handle the error object returned by api.js
       alert('Error deleting account: ' + (err.error || err.message));
     } finally {
       setIsDeleting(false);
@@ -80,8 +77,6 @@ function App() {
     async function fetchForecasts() {
       try {
         setFetchError(null);
-        // We keep direct fetch here for OpenWeatherMap
-        // because it's an external API, not our backend.
         const responses = await Promise.all(
           allCoords.map(coord =>
             fetch(
@@ -118,12 +113,19 @@ function App() {
     onCancel: () => setShowLogoutModal(false),
   };
 
+  // Common UI for Error/Loading states
+  const TopRightLogout = () => (
+    <div className="fixed top-6 right-6 z-50">
+      <LogoutButton onClick={() => setShowLogoutModal(true)} />
+    </div>
+  );
+
   if (error) {
     return (
       <DashboardLayout {...layoutProps}>
+        <TopRightLogout />
         <PageTitle>{t('common.appTitle')}</PageTitle>
         <ErrorMessage message={error} />
-        <LogoutButton onClick={() => setShowLogoutModal(true)} />
         {showLogoutModal && <LogoutModal {...modalProps} />}
       </DashboardLayout>
     );
@@ -132,6 +134,7 @@ function App() {
   if (isLoadingGeo || (!forecast && !error)) {
     return (
       <DashboardLayout {...layoutProps}>
+        {/* We generally don't show logout during loading, but we can if you want */}
         <PageTitle>{t('common.appTitle')}</PageTitle>
         <LoadingSpinner message={t('common.loading')} />
       </DashboardLayout>
@@ -140,10 +143,12 @@ function App() {
 
   return (
     <DashboardLayout {...layoutProps}>
+      {/* ✅ Fixed Position Logout Button */}
+      <TopRightLogout />
+
       <PageTitle className="leading-tight">{t('common.appTitle')}</PageTitle>
 
-      <LogoutButton onClick={() => setShowLogoutModal(true)} />
-
+      {/* Modals */}
       {showLogoutModal && <LogoutModal {...modalProps} />}
       {showDeleteModal && (
         <DeleteAccountModal

@@ -104,32 +104,32 @@ JWT_SECRET=your_super_secret_key
 
 ### 📌 Project Status & Roadmap
 
-✅ Completed Milestones
+✅ **Completed Milestones**
 
-- [x] Fetch and display weather data
-- [x] Add alerts for extreme conditions
-- [x] Implement Login/Signup system
-- [x] Secure Password Hashing & JWT Auth
-- [x] Global Theming: Dark/Light mode with Database persistence
-- [x] Navigation: Responsive Sidebar with "Settings" menu
+- [x] **Core Features:** Fetch and display weather data & extreme condition alerts.
+- [x] **Authentication:** Secure Login/Signup with Password Hashing & JWT.
+- [x] **Theming:** Global Dark/Light mode with Database persistence.
+- [x] **Navigation:** Responsive Sidebar with "Settings" menu & Language toggles.
+- [x] **Architecture (Backend):** Refactored monolithic `index.js` into modular Routes (`auth.js`, `users.js`).
+- [x] **Architecture (Frontend):** Implemented centralized `services/api.js` layer (removed raw fetch calls).
 
-🚧 Phase 1: Architecture Refactoring (The "Pro" Upgrade)
+🚧 **Phase 1: UI/UX Refinement**
 
-- [ ] File Structure: Move generic components (AuthForm, Map) into their own folders.
-- [ ] Clean Imports: Add index.jsx files to component folders.
-- [ ] CSS Modularization: Convert remaining global styles to Component.module.css.
+- [ ] **Profile Management:** Create a **Profile Modal** to allow users to upload, change, or remove their profile picture.
+- [ ] **CSS Modularization:** Convert remaining global styles to `Component.module.css` for better isolation.
+- [ ] **Mobile Responsiveness:** Polish the layout for smaller screens (Sidebar behavior, Modal sizing).
 
-✨ Phase 2: Feature Expansion
+✨ **Phase 2: Community & Content**
 
-- [ ] Volunteer Page: Create a view for community disaster relief volunteering.
-- [ ] Help & Contact: Add a support/FAQ section for users.
-- [ ] About Page: Project information and mission statement.
-- [ ] Sidebar Integration: Link these new pages to the existing Sidebar navigation.
+- [ ] **Volunteer Page:** A distinct, dedicated page for community disaster relief volunteering.
+- [ ] **Help & Contact:** Add a support/FAQ section for users.
+- [ ] **About Page:** Project information and mission statement.
 
-📱 Phase 3: Enhancements
+🛡️ **Phase 3: Administration & Security (RBAC)**
 
-- [ ] User Dashboard: Save favorite locations and view search history.
-- [ ] Mobile Responsiveness: Further polish for small screens.
+- [ ] **Role-Based Access Control (RBAC):** Implement `Admin` vs `User` roles in the database.
+- [ ] **Admin Dashboard:** Create a restricted view for administrators.
+- [ ] **Disaster Notifications:** Allow Admin users to trigger and send manual alerts for natural disasters to all users.
 
 📄 License
 This project is open source and available under the MIT License.

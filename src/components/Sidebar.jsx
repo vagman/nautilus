@@ -3,7 +3,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { Trash2, Globe, Check } from 'lucide-react';
 import ReactCountryFlag from 'react-country-flag';
-import { userService } from '../services/api'; // ✅ Import Service
+import { userService } from '../services/api';
 
 function Sidebar({
   isOpen,
@@ -17,17 +17,36 @@ function Sidebar({
   const { darkMode, toggleTheme } = useTheme();
   const [showSettings, setShowSettings] = useState(false);
 
+  // ✅ NEW: Handle Theme Change & Sync to DB
+  const handleThemeChange = async () => {
+    // 1. Toggle Visual Theme
+    toggleTheme();
+
+    // 2. Determine the new value (If we were Dark, we are becoming Light, etc.)
+    const newTheme = darkMode ? 'light' : 'dark';
+
+    if (user) {
+      // 3. Update LocalStorage so it persists on reload
+      const updatedUser = { ...user, theme_preference: newTheme };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      try {
+        // 4. Sync with Database
+        await userService.updateTheme(user.id, newTheme);
+      } catch (err) {
+        console.error('Failed to sync theme:', err);
+      }
+    }
+  };
+
   const handleLanguageChange = async langCode => {
-    // 1. Change locally immediately for UI speed
     i18n.changeLanguage(langCode);
 
     if (user) {
-      // 2. Update LocalStorage so it persists on reload
       const updatedUser = { ...user, language_preference: langCode };
       localStorage.setItem('user', JSON.stringify(updatedUser));
 
       try {
-        // 3. Sync with Database using the service
         await userService.updateLanguage(user.id, langCode);
       } catch (err) {
         console.error('Failed to sync language:', err);
@@ -106,12 +125,12 @@ function Sidebar({
             }`}
           >
             <ul className="list-none p-0 bg-black/5 dark:bg-black/20 shadow-inner">
-              {/* Theme Toggle */}
+              {/* ✅ FIXED THEME TOGGLE */}
               <li
                 className="pl-10 p-4 cursor-pointer text-sm border-b border-gray-200 dark:border-[#444] hover:text-[#646cff] transition-colors"
                 onClick={e => {
                   e.stopPropagation();
-                  toggleTheme();
+                  handleThemeChange(); // <--- Now calls our new function!
                 }}
               >
                 {darkMode

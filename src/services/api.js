@@ -42,6 +42,17 @@ export const userService = {
     return res.json();
   },
 
+  // ✅ THIS WAS MISSING
+  updateTheme: async (userId, theme) => {
+    const res = await fetch(`${API_URL}/users/${userId}/theme`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify({ theme }),
+    });
+    if (!res.ok) throw await res.json();
+    return res.json();
+  },
+
   deleteAccount: async userId => {
     const res = await fetch(`${API_URL}/api/users/${userId}`, {
       method: 'DELETE',
