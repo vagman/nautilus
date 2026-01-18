@@ -1,224 +1,115 @@
-import { useState } from 'react';
-import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import { Trash2, Globe, Check } from 'lucide-react';
-import ReactCountryFlag from 'react-country-flag';
-import { userService } from '../services/api';
+import { NavLink } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  Settings as SettingsIcon,
+  LogOut,
+  User,
+  X,
+  AlertTriangle,
+  Users,
+  FilePlus,
+} from 'lucide-react';
 
-function Sidebar({
-  isOpen,
-  toggleSidebar,
-  user,
-  onOpenHelp,
-  onOpenAbout,
-  onRequestDelete,
-}) {
-  const { t, i18n } = useTranslation();
-  const { darkMode, toggleTheme } = useTheme();
-  const [showSettings, setShowSettings] = useState(false);
+const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
+  const { t } = useTranslation();
 
-  // ✅ NEW: Handle Theme Change & Sync to DB
-  const handleThemeChange = async () => {
-    // 1. Toggle Visual Theme
-    toggleTheme();
-
-    // 2. Determine the new value (If we were Dark, we are becoming Light, etc.)
-    const newTheme = darkMode ? 'light' : 'dark';
-
-    if (user) {
-      // 3. Update LocalStorage so it persists on reload
-      const updatedUser = { ...user, theme_preference: newTheme };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-
-      try {
-        // 4. Sync with Database
-        await userService.updateTheme(user.id, newTheme);
-      } catch (err) {
-        console.error('Failed to sync theme:', err);
-      }
-    }
-  };
-
-  const handleLanguageChange = async langCode => {
-    i18n.changeLanguage(langCode);
-
-    if (user) {
-      const updatedUser = { ...user, language_preference: langCode };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-
-      try {
-        await userService.updateLanguage(user.id, langCode);
-      } catch (err) {
-        console.error('Failed to sync language:', err);
-      }
-    }
-  };
-
-  if (!user) return null;
-
-  const menuItems = [
-    {
-      key: 'volunteer',
-      icon: '🤝',
-      label: t('sidebar.volunteer'),
-      action: () => {},
-    },
-    { key: 'help', icon: '❓', label: t('sidebar.help'), action: onOpenHelp },
-    {
-      key: 'about',
-      icon: 'ℹ️',
-      label: t('sidebar.about'),
-      action: onOpenAbout,
-    },
-  ];
+  // Helper to determine link styling
+  const getLinkClass = ({ isActive }) =>
+    `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 group mb-1 ${
+      isActive
+        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-blue-600 dark:hover:text-blue-400'
+    }`;
 
   return (
-    <>
-      <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[1999] transition-opacity duration-300 ${
-          isOpen
-            ? 'opacity-100 visible'
-            : 'opacity-0 invisible pointer-events-none'
-        }`}
-        onClick={toggleSidebar}
-      />
-
-      <div
-        className={`fixed top-0 left-0 w-[280px] h-screen bg-white dark:bg-[#2d2d2d] text-[#333] dark:text-white shadow-[4px_0_15px_rgba(0,0,0,0.2)] transform transition-transform duration-300 ease-in-out z-[2000] flex flex-col ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        {/* Header */}
-        <div className="p-6 flex justify-between items-center border-b border-gray-200 dark:border-[#444]">
-          <h3 className="text-xl font-bold m-0">{t('sidebar.menu')}</h3>
-          <button
-            onClick={toggleSidebar}
-            className="text-3xl bg-transparent border-none cursor-pointer text-[#333] dark:text-white hover:text-blue-500 transition-colors"
-          >
-            &times;
-          </button>
-        </div>
-
-        {/* User Info */}
-        <div className="p-6 bg-black/5 dark:bg-white/5">
-          <p className="m-0">
-            👤 <span className="font-semibold">{user.username}</span>
-          </p>
-        </div>
-
-        <ul className="list-none p-0 m-0 flex flex-col">
-          {/* Settings Toggle */}
-          <li
-            className="p-4 pl-6 cursor-pointer border-b border-gray-200 dark:border-[#444] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-            onClick={() => setShowSettings(!showSettings)}
-          >
-            <div className="flex justify-between items-center font-medium">
-              <span>⚙️ {t('sidebar.settings')}</span>
-              <span className="text-sm">{showSettings ? '▼' : '▶'}</span>
-            </div>
-          </li>
-
-          {/* Settings Submenu */}
-          <div
-            className={`overflow-hidden transition-all duration-300 ${
-              showSettings ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-            }`}
-          >
-            <ul className="list-none p-0 bg-black/5 dark:bg-black/20 shadow-inner">
-              {/* ✅ FIXED THEME TOGGLE */}
-              <li
-                className="pl-10 p-4 cursor-pointer text-sm border-b border-gray-200 dark:border-[#444] hover:text-[#646cff] transition-colors"
-                onClick={e => {
-                  e.stopPropagation();
-                  handleThemeChange(); // <--- Now calls our new function!
-                }}
-              >
-                {darkMode
-                  ? `☀️ ${t('sidebar.themeLight')}`
-                  : `🌙 ${t('sidebar.themeDark')}`}
-              </li>
-
-              {/* Language Section Header */}
-              <li className="pl-10 p-3 text-xs font-bold text-gray-400 uppercase tracking-wider mt-2">
-                {t('sidebar.language')}
-              </li>
-
-              {/* English Option */}
-              <li
-                onClick={e => {
-                  e.stopPropagation();
-                  handleLanguageChange('en');
-                }}
-                className={`pl-10 pr-6 p-3 cursor-pointer text-sm flex items-center justify-between transition-colors ${
-                  i18n.language === 'en'
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <ReactCountryFlag
-                    countryCode="US"
-                    svg
-                    style={{ width: '1.2em', height: '1.2em' }}
-                  />
-                  <span>English</span>
-                </div>
-                {i18n.language === 'en' && <Check size={16} />}
-              </li>
-
-              {/* Greek Option */}
-              <li
-                onClick={e => {
-                  e.stopPropagation();
-                  handleLanguageChange('el');
-                }}
-                className={`pl-10 pr-6 p-3 border-b border-gray-200 dark:border-[#444] cursor-pointer text-sm flex items-center justify-between transition-colors ${
-                  i18n.language === 'el'
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <ReactCountryFlag
-                    countryCode="GR"
-                    svg
-                    style={{ width: '1.2em', height: '1.2em' }}
-                  />
-                  <span>Ελληνικά</span>
-                </div>
-                {i18n.language === 'el' && <Check size={16} />}
-              </li>
-
-              {/* Delete Account */}
-              <li
-                className="pl-10 p-4 cursor-pointer text-sm border-b border-gray-200 dark:border-[#444] text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors font-medium flex items-center gap-2"
-                onClick={e => {
-                  e.stopPropagation();
-                  onRequestDelete();
-                }}
-              >
-                <Trash2 size={16} />
-                {t('sidebar.deleteAccount')}
-              </li>
-            </ul>
+    <aside
+      className={`
+        ${isOpen ? 'w-72 translate-x-0' : 'w-0 -translate-x-full opacity-0'} 
+        bg-white dark:bg-[#252535] border-r border-gray-200 dark:border-[#333]
+        flex flex-col h-full transition-all duration-300 ease-in-out
+        fixed md:relative z-40 shadow-2xl md:shadow-none
+      `}
+    >
+      {/* 1. Header with Logo */}
+      <div className="p-6 flex items-center justify-between border-b border-gray-100 dark:border-[#333]">
+        <div className="flex items-center gap-3 overflow-hidden">
+          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shrink-0 shadow-blue-500/30 shadow-lg">
+            N
           </div>
-
-          {/* Standard Menu Items */}
-          {menuItems.map(item => (
-            <li
-              key={item.key}
-              className="p-4 pl-6 cursor-pointer border-b border-gray-200 dark:border-[#444] hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-medium"
-              onClick={() => {
-                if (item.action) item.action();
-              }}
-            >
-              {item.icon} {item.label}
-            </li>
-          ))}
-        </ul>
+          <h1 className="font-bold text-xl text-gray-800 dark:text-white truncate tracking-tight">Nautilus</h1>
+        </div>
+        <button
+          onClick={toggle}
+          className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 text-gray-500 transition-colors md:hidden"
+        >
+          <X size={20} />
+        </button>
       </div>
-    </>
+
+      {/* Navigation List */}
+      <nav className="flex-1 px-4 py-6 overflow-y-auto scrollbar-hide">
+        {/* MENU SECTION */}
+        <div className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-4 mb-3 mt-2">
+          {t('sidebar.menu')}
+        </div>
+
+        {/* My Profile */}
+        <NavLink to="/profile" className={getLinkClass}>
+          <User size={20} />
+          <span className="font-medium">{t('profile.title')}</span>
+        </NavLink>
+
+        {/* Dashboard */}
+        <NavLink to="/" className={getLinkClass}>
+          <LayoutDashboard size={20} />
+          <span className="font-medium">{t('sidebar.dashboard')}</span>
+        </NavLink>
+
+        {/* 1. DISASTER MAP (Visible to Everyone) */}
+        <NavLink to="/disasters" className={getLinkClass}>
+          <AlertTriangle size={20} />
+          {/* ✅ Translated */}
+          <span className="font-medium">{t('sidebar.disastersMap')}</span>
+        </NavLink>
+
+        {/* 2. ADMIN ONLY: Report Creator */}
+        {user?.role === 'admin' && (
+          <NavLink to="/admin/reports" className={getLinkClass}>
+            <FilePlus size={20} />
+            {/* ✅ Translated */}
+            <span className="font-medium">{t('sidebar.manageReports')}</span>
+          </NavLink>
+        )}
+
+        {/* 3. VOLUNTEER (Visible to Everyone) */}
+        <NavLink to="/volunteer" className={getLinkClass}>
+          <Users size={20} />
+          {/* ✅ Translated */}
+          <span className="font-medium">{t('sidebar.volunteerHub')}</span>
+        </NavLink>
+
+        {/* SETTINGS SECTION */}
+        <div className="pt-6 pb-2 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-4 mt-2">
+          {t('sidebar.settings')}
+        </div>
+
+        <NavLink to="/settings" className={getLinkClass}>
+          <SettingsIcon size={20} />
+          <span className="font-medium">{t('sidebar.settings')}</span>
+        </NavLink>
+
+        {/* Log Out */}
+        <button
+          onClick={onLogout}
+          className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 transition-all text-left mt-2"
+        >
+          <LogOut size={20} />
+          <span className="font-medium">{t('sidebar.logout')}</span>
+        </button>
+      </nav>
+    </aside>
   );
-}
+};
 
 export default Sidebar;

@@ -7,16 +7,10 @@ function DeleteAccountModal({ isOpen, onClose, onConfirm, isDeleting }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('deleteAccount.title')}>
       <div className="space-y-4">
-        <p className="text-gray-600 dark:text-gray-300">
-          {t('deleteAccount.confirmation')}
-        </p>
+        <p className="text-gray-600 dark:text-gray-300">{t('deleteAccount.confirmation')}</p>
         <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-600 dark:text-red-400 font-bold">
-            {t('deleteAccount.warningTitle')}
-          </p>
-          <p className="text-sm text-red-600 dark:text-red-400 mt-1">
-            {t('deleteAccount.warningText')}
-          </p>
+          <p className="text-sm text-red-600 dark:text-red-400 font-bold">{t('deleteAccount.warningTitle')}</p>
+          <p className="text-sm text-red-600 dark:text-red-400 mt-1">{t('deleteAccount.warningText')}</p>
         </div>
 
         <div className="flex justify-end gap-3 pt-4">
@@ -32,9 +26,7 @@ function DeleteAccountModal({ isOpen, onClose, onConfirm, isDeleting }) {
             disabled={isDeleting}
             className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white shadow-md transition-colors font-bold flex items-center gap-2"
           >
-            {isDeleting
-              ? t('common.deleting')
-              : t('deleteAccount.confirmButton')}
+            {isDeleting ? t('common.deleting') : t('deleteAccount.confirmButton')}
           </button>
         </div>
       </div>

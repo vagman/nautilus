@@ -104,32 +104,43 @@ JWT_SECRET=your_super_secret_key
 
 ### 📌 Project Status & Roadmap
 
-✅ **Completed Milestones**
+## ✅ Completed Milestones
+
+### **Core & Infrastructure**
 
 - [x] **Core Features:** Fetch and display weather data & extreme condition alerts.
 - [x] **Authentication:** Secure Login/Signup with Password Hashing & JWT.
 - [x] **Theming:** Global Dark/Light mode with Database persistence & UI Sync.
 - [x] **Navigation:** Responsive Sidebar with "Settings" menu & Language toggles.
-- [x] **UI Polish:** Fixed Logout button positioning (Top-Right) & Sidebar interaction.
-- [x] **Architecture (Backend):** Refactored monolithic `index.js` into modular Routes (`auth.js`, `users.js`).
-- [x] **Architecture (Frontend):** Implemented centralized `services/api.js` layer (removed raw fetch calls).
-- [x] **Database:** Standardized `schema.sql` and synchronized user preferences (Language/Theme).
+- [x] **Architecture:** Modular Backend Routes (`auth.js`, `users.js`, `disasters.js`, `volunteer.js`) & Centralized Frontend API.
+- [x] **Database:** Standardized PostgreSQL schema with synchronized user preferences.
 
-🚧 **Phase 1: UI/UX Refinement**
+### **Phase 1: UI/UX Refinement**
 
-- [ ] **Profile Management:** Create a **Profile Modal** to allow users to upload, change, or remove their profile picture.
+- [x] **Profile Management:** Users can update details and upload profile pictures (Base64).
+- [x] **UI Polish:** Responsive layouts, loading states, and consistent card designs.
 
-✨ **Phase 2: Community & Content**
+### **Phase 2: Community & Content**
 
-- [ ] **Volunteer Page:** A distinct, dedicated page for community disaster relief volunteering.
-- [x] **Help & Contact:** Add a support/FAQ section for users (Implemented as `HelpModal`).
-- [x] **About Page:** Project information and mission statement (Implemented as `AboutModal`).
+- [x] **Volunteer Page:** A dedicated hub for creating and viewing disaster relief events.
+- [x] **About Section:** Integrated into Settings for easy access to version/mission info.
 
-🛡️ **Phase 3: Administration & Security (RBAC)**
+### **Phase 3: Administration & Security (RBAC)**
 
-- [ ] **Role-Based Access Control (RBAC):** Implement `Admin` vs `User` roles in the database.
-- [ ] **Admin Dashboard:** Create a restricted view for administrators.
-- [ ] **Disaster Notifications:** Allow Admin users to trigger and send manual alerts for natural disasters to all users.
+- [x] **Role-Based Access Control (RBAC):** Database support for `Admin` vs `User` roles.
+- [x] **Admin Reporting:** Interactive map interface for admins to publish new disaster alerts.
+- [x] **Admin Controls:** Conditional rendering of "Create Event" and "Manage Reports" buttons.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React (Vite), Tailwind CSS, Leaflet Maps, Framer Motion (animations), Lucide React (icons), i18next (translation).
+- **Backend:** Node.js, Express, PostgreSQL.
+
+## 🔮 Coming Soon / Next Steps
+
+- [ ] **Push Notifications:** Browser notifications for high-severity alerts in the user's radius.
+- [ ] **Chat System:** Real-time chat for volunteer event coordination.
+- [ ] **Advanced Filtering:** Filter disasters by type (Fire, Flood, Earthquake).
 
 📄 License
 This project is open source and available under the MIT License.

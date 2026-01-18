@@ -8,9 +8,7 @@ export function generateSurroundingCoordinates(center, radius, count = 8) {
     const dy = radius * Math.sin(angle);
 
     const deltaLat = (dy / EARTH_RADIUS) * (180 / Math.PI);
-    const deltaLon =
-      (dx / (EARTH_RADIUS * Math.cos((center.lat * Math.PI) / 180))) *
-      (180 / Math.PI);
+    const deltaLon = (dx / (EARTH_RADIUS * Math.cos((center.lat * Math.PI) / 180))) * (180 / Math.PI);
 
     coords.push({
       lat: center.lat + deltaLat,

@@ -7,9 +7,7 @@ export function useGeolocation() {
   const [position, setPosition] = useState(null);
 
   const [error, setError] = useState(() => {
-    return browserSupportsGeolocation
-      ? null
-      : 'Geolocation is not supported by your browser';
+    return browserSupportsGeolocation ? null : 'Geolocation is not supported by your browser';
   });
 
   useEffect(() => {
@@ -26,7 +24,7 @@ export function useGeolocation() {
       error => {
         setError(error.message);
         setIsLoading(false);
-      }
+      },
     );
   }, [browserSupportsGeolocation]);
 

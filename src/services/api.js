@@ -10,11 +10,13 @@ const getHeaders = () => {
 };
 
 export const authService = {
-  login: async credentials => {
+  // ✅ FIX 1: Accept email and password as separate arguments
+  login: async (email, password) => {
     const res = await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials),
+      // ✅ FIX 2: Wrap them in an object before stringifying
+      body: JSON.stringify({ email, password }),
     });
     if (!res.ok) throw await res.json();
     return res.json();
@@ -42,9 +44,9 @@ export const userService = {
     return res.json();
   },
 
-  // ✅ THIS WAS MISSING
   updateTheme: async (userId, theme) => {
-    const res = await fetch(`${API_URL}/users/${userId}/theme`, {
+    // ✅ FIX 3: Added '/api' to match the other routes for consistency
+    const res = await fetch(`${API_URL}/api/users/${userId}/theme`, {
       method: 'PUT',
       headers: getHeaders(),
       body: JSON.stringify({ theme }),

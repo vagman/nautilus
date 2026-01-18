@@ -5,10 +5,7 @@ function RadiusSlider({ value, onChange, onFinalChange }) {
 
   return (
     <div className="w-full max-w-3xl mb-6 bg-white dark:bg-[#2d2d2d] p-4 rounded-lg shadow-md transition-colors">
-      <label
-        htmlFor="radius-slider"
-        className="block mb-2 font-bold text-gray-700 dark:text-gray-200"
-      >
+      <label htmlFor="radius-slider" className="block mb-2 font-bold text-gray-700 dark:text-gray-200">
         {t('forecast.radiusLabel')}: {Math.round(value / 1000)} km
       </label>
       <input

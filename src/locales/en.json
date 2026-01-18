@@ -1,18 +1,29 @@
 {
   "auth": {
-    "welcome": "Welcome Back",
-    "appDescription": "Your advanced dashboard for real-time weather monitoring and environmental safety. Stay informed with precise forecasts and timely alerts.",
-    "loginTitle": "Login to your account",
-    "signupTitle": "Create an account",
-    "usernameLabel": "Username",
-    "emailLabel": "Email Address",
-    "passwordLabel": "Password",
-    "loginBtn": "Sign In",
-    "signupBtn": "Sign Up",
-    "switchToSignup": "Don't have an account? Sign Up",
-    "switchToLogin": "Already have an account? Login",
-    "language": "Language",
-    "invalidCredentials": "Invalid credentials"
+    "login": "Log In",
+    "signup": "Sign Up",
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create Account",
+    "appDescription": "Your advanced dashboard for real-time weather monitoring and environmental safety.",
+    "email": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "loginButton": "Sign In",
+    "signupButton": "Create Account",
+    "forgotPassword": "Forgot your password?",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "invalidCredentials": "Invalid credentials",
+    "processing": "Processing...",
+    "authenticationFailed": "Authentication failed",
+    "passwordRequirements": "Password requirements:",
+    "reqLength": "At least 8 characters",
+    "reqUpper": "At least 1 capital letter (A-Z)",
+    "reqNumber": "At least 1 number (0-9)",
+    "reqSymbol": "At least 1 symbol (!@#$...)",
+    "passwordsMatch": "Passwords match"
   },
   "common": {
     "cancel": "Cancel",
@@ -20,6 +31,24 @@
     "error": "Error",
     "appTitle": "Management of Environmental Phenomena and Natural Disasters",
     "loading": "Loading location and weather data..."
+  },
+  "profile": {
+    "title": "My Profile",
+    "settings": "Profile Settings",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "uploadPhoto": "Upload Photo",
+    "save": "Save Changes",
+    "cancel": "Cancel"
+  },
+  "settings": {
+    "title": "Settings",
+    "desc": "Manage your application preferences and appearance.",
+    "appearance": "Appearance",
+    "appearanceDesc": "Customize how Nautilus looks on your device.",
+    "language": "Language",
+    "languageDesc": "Select your preferred language interface."
   },
   "deleteAccount": {
     "title": "⚠️ Delete Account",
@@ -51,13 +80,13 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "github": "GitHub Repo",
-    "rights": "All rights and lefts reserved.",
+    "rights": "All rights reserved.",
     "unauthorized": "Unauthorized duplication or distribution of this software is strictly prohibited."
   },
   "logout": {
     "title": "Confirm Logout",
     "message": "Are you sure you want to log out?",
-    "confirm": "Logout",
+    "confirm": "Log Out",
     "cancel": "Cancel"
   },
   "forecast": {
@@ -75,13 +104,35 @@
   },
   "sidebar": {
     "menu": "Menu",
+    "dashboard": "Weather Map",
+    "disastersMap": "Disasters Map",
+    "manageReports": "Manage Reports",
+    "volunteerHub": "Volunteer Hub",
     "settings": "Settings",
-    "themeLight": "Switch to Light",
-    "themeDark": "Switch to Dark",
-    "language": "Language",
-    "deleteAccount": "Delete Account",
-    "volunteer": "Volunteer",
-    "help": "Help",
-    "about": "About"
+    "themeLight": "Light Mode",
+    "themeDark": "Dark Mode",
+    "logout": "Log Out"
+  },
+  "volunteer": {
+    "title": "Volunteer Hub",
+    "subtitle": "Join the community and make a difference.",
+    "newEvent": "New Event",
+    "cancel": "Cancel",
+    "form": {
+      "titlePlaceholder": "Event Title",
+      "descPlaceholder": "Description",
+      "locationPlaceholder": "Location",
+      "durationPlaceholder": "Duration (e.g. 2 hours)",
+      "imagePlaceholder": "Image URL (http://...)",
+      "toolsPlaceholder": "Select Needed Tools...",
+      "toolGloves": "Gloves & Trash Bags",
+      "toolShovels": "Shovels & Boots",
+      "toolWater": "Water & Canned Food",
+      "toolMedical": "First Aid / Medical Kits",
+      "publishButton": "Publish Event"
+    },
+    "noEvents": "No volunteer events found. Check back later!",
+    "needs": "Needs",
+    "viewDetails": "View Details"
   }
 }

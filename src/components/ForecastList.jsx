@@ -23,9 +23,7 @@ function ForecastList({ forecast }) {
           const min = Math.min(...temps);
           const max = Math.max(...temps);
           const hasRain = entries.some(e =>
-            ['rain', 'drizzle', 'shower'].some(word =>
-              e.weather[0].main.toLowerCase().includes(word)
-            )
+            ['rain', 'drizzle', 'shower'].some(word => e.weather[0].main.toLowerCase().includes(word)),
           );
           const hasHeat = max > 35;
           const hasWind = entries.some(e => e.wind.speed > 10);
@@ -57,22 +55,12 @@ function ForecastList({ forecast }) {
                 {t('forecast.adviceTitle')}
               </h4>
               <ul className="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300">
-                {hasHeat && (
-                  <li className="text-red-500 dark:text-red-400 font-medium">
-                    {t('forecast.heat')}
-                  </li>
-                )}
-                {hasRain && (
-                  <li className="text-blue-500 dark:text-blue-400 font-medium">
-                    {t('forecast.rain')}
-                  </li>
-                )}
+                {hasHeat && <li className="text-red-500 dark:text-red-400 font-medium">{t('forecast.heat')}</li>}
+                {hasRain && <li className="text-blue-500 dark:text-blue-400 font-medium">{t('forecast.rain')}</li>}
                 {hasWind && <li>{t('forecast.wind')}</li>}
                 {max > 30 && !hasRain && <li>{t('forecast.sunny')}</li>}
                 {min < 10 && <li>{t('forecast.cold')}</li>}
-                {!hasHeat && !hasRain && !hasWind && max <= 30 && min >= 10 && (
-                  <li>{t('forecast.mild')}</li>
-                )}
+                {!hasHeat && !hasRain && !hasWind && max <= 30 && min >= 10 && <li>{t('forecast.mild')}</li>}
               </ul>
             </div>
           );

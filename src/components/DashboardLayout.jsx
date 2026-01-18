@@ -1,45 +1,42 @@
 import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import HelpModal from './HelpModal';
-import AboutModal from './AboutModal';
+import { Menu } from 'lucide-react';
 
-function DashboardLayout({
-  children,
-  user,
-  isSidebarOpen,
-  setSidebarOpen,
-  onRequestDelete,
-}) {
-  const [showHelpModal, setShowHelpModal] = useState(false);
-  const [showAboutModal, setShowAboutModal] = useState(false);
+const DashboardLayout = ({ user, onLogout }) => {
+  // ✅ 1. State for Sidebar (Open/Close)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  // Toggle function to pass down
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center p-4 md:p-8 bg-[#f0f2f5] dark:bg-[#1a1a1a] text-[#333] dark:text-white transition-colors duration-300">
-      <Sidebar
-        isOpen={isSidebarOpen}
-        toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
-        user={user}
-        onOpenHelp={() => setShowHelpModal(true)}
-        onOpenAbout={() => setShowAboutModal(true)}
-        onRequestDelete={onRequestDelete} // ✅ Pass it down
-      />
+    <div className="flex h-screen bg-gray-100 dark:bg-[#1a1a2e] transition-colors duration-300 overflow-hidden">
+      {/* ✅ 2. The Sidebar Component */}
+      <Sidebar user={user} isOpen={isSidebarOpen} toggle={toggleSidebar} onLogout={onLogout} />
 
-      <button
-        className="absolute top-5 left-5 z-30 text-3xl bg-transparent border-none cursor-pointer text-[#333] dark:text-white hover:text-blue-500 transition-colors"
-        onClick={() => setSidebarOpen(true)}
-      >
-        ☰
-      </button>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col h-full relative transition-all duration-300">
+        {/* Mobile Toggle Button (Visible only when sidebar is closed or on mobile) */}
+        {!isSidebarOpen && (
+          <div className="absolute top-4 left-4 z-50">
+            <button
+              onClick={toggleSidebar} // ✅ This fixes the "setSidebarOpen is not a function" error
+              className="p-2 bg-white dark:bg-[#2d2d44] text-gray-700 dark:text-gray-200 rounded-md shadow-md hover:bg-gray-50 transition-colors"
+            >
+              <Menu size={24} />
+            </button>
+          </div>
+        )}
 
-      {showHelpModal && <HelpModal onClose={() => setShowHelpModal(false)} />}
-      <AboutModal
-        isOpen={showAboutModal}
-        onClose={() => setShowAboutModal(false)}
-      />
-
-      {children}
+        {/* ✅ 3. THE OUTLET (Critical!) */}
+        {/* This is where the Dashboard, Profile, or ChangePassword pages get rendered */}
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth">
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default DashboardLayout;

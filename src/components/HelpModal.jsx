@@ -35,10 +35,7 @@ function HelpModal({ onClose }) {
   // Logic: Close the active answer if clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
         setOpenIndex(null);
       }
     }
@@ -63,9 +60,7 @@ function HelpModal({ onClose }) {
       >
         {/* Header */}
         <div className="p-6 border-b border-gray-200 dark:border-[#444] flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-            {t('help.title')}
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{t('help.title')}</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl leading-none"
@@ -78,10 +73,7 @@ function HelpModal({ onClose }) {
         <div className="p-6 overflow-y-auto" ref={containerRef}>
           <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <div
-                key={index}
-                className="border border-gray-200 dark:border-[#444] rounded-lg overflow-hidden"
-              >
+              <div key={index} className="border border-gray-200 dark:border-[#444] rounded-lg overflow-hidden">
                 <button
                   onClick={() => toggleQuestion(index)}
                   className={`w-full text-left px-5 py-4 font-semibold flex justify-between items-center transition-colors duration-200 ${
@@ -92,9 +84,7 @@ function HelpModal({ onClose }) {
                 >
                   <span>{faq.question}</span>
                   <span
-                    className={`transform transition-transform duration-300 ${
-                      openIndex === index ? 'rotate-180' : ''
-                    }`}
+                    className={`transform transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}
                   >
                     ▼
                   </span>
@@ -102,9 +92,7 @@ function HelpModal({ onClose }) {
 
                 <div
                   className={`transition-[max-height,opacity] duration-300 ease-in-out overflow-hidden ${
-                    openIndex === index
-                      ? 'max-h-48 opacity-100'
-                      : 'max-h-0 opacity-0'
+                    openIndex === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
                   }`}
                 >
                   <div className="p-5 text-gray-600 dark:text-gray-300 text-sm leading-relaxed border-t border-gray-100 dark:border-[#444]">

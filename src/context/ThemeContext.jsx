@@ -62,9 +62,7 @@ export function ThemeProvider({ children }) {
   };
 
   return (
-    <ThemeContext.Provider
-      value={{ darkMode, toggleTheme, syncUserTheme, clearUserThemeSync }}
-    >
+    <ThemeContext.Provider value={{ darkMode, toggleTheme, syncUserTheme, clearUserThemeSync }}>
       {children}
     </ThemeContext.Provider>
   );

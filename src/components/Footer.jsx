@@ -25,11 +25,7 @@ function Footer() {
           rel="noopener noreferrer"
           className="opacity-80 hover:opacity-100 transition-opacity"
         >
-          <img
-            src={openWeatherLogo}
-            alt="OpenWeather logo"
-            className="h-10 w-auto"
-          />
+          <img src={openWeatherLogo} alt="OpenWeather logo" className="h-10 w-auto" />
         </a>
       </div>
     </footer>
