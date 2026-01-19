@@ -18,7 +18,7 @@ function ChangePassword({ user, onLogout }) {
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Validate Regex (Same as Backend)
+  // Validate Regex
   const isStrong = pwd => /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(pwd);
 
   const handleSubmit = async e => {

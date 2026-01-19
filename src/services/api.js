@@ -1,6 +1,5 @@
 const API_URL = 'http://localhost:4000';
 
-// Helper to get headers (including token if it exists)
 const getHeaders = () => {
   const token = localStorage.getItem('token');
   return {
@@ -10,20 +9,19 @@ const getHeaders = () => {
 };
 
 export const authService = {
-  // ✅ FIX 1: Accept email and password as separate arguments
   login: async (email, password) => {
-    const res = await fetch(`${API_URL}/login`, {
+    const res = await fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      // ✅ FIX 2: Wrap them in an object before stringifying
       body: JSON.stringify({ email, password }),
     });
+    // This catches 400/401 errors so you can see them in the frontend
     if (!res.ok) throw await res.json();
-    return res.json();
+    return res.json(); // Returns { user, token }
   },
 
   signup: async userData => {
-    const res = await fetch(`${API_URL}/signup`, {
+    const res = await fetch(`${API_URL}/api/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
@@ -45,7 +43,6 @@ export const userService = {
   },
 
   updateTheme: async (userId, theme) => {
-    // ✅ FIX 3: Added '/api' to match the other routes for consistency
     const res = await fetch(`${API_URL}/api/users/${userId}/theme`, {
       method: 'PUT',
       headers: getHeaders(),
@@ -59,6 +56,17 @@ export const userService = {
     const res = await fetch(`${API_URL}/api/users/${userId}`, {
       method: 'DELETE',
       headers: getHeaders(),
+    });
+    if (!res.ok) throw await res.json();
+    return res.json();
+  },
+
+  // You might need this for the Change Password page too!
+  changePassword: async (userId, currentPassword, newPassword) => {
+    const res = await fetch(`${API_URL}/api/users/${userId}/password`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify({ currentPassword, newPassword }),
     });
     if (!res.ok) throw await res.json();
     return res.json();

@@ -110,9 +110,10 @@ JWT_SECRET=your_super_secret_key
 
 - [x] **Core Features:** Fetch and display weather data & extreme condition alerts.
 - [x] **Authentication:** Secure Login/Signup with Password Hashing & JWT.
+- [x] **Secure Email System:** Integrated **Google OAuth 2.0** with Nodemailer for secure delivery of system emails.
 - [x] **Theming:** Global Dark/Light mode with Database persistence & UI Sync.
 - [x] **Navigation:** Responsive Sidebar with "Settings" menu & Language toggles.
-- [x] **Architecture:** Modular Backend Routes (`auth.js`, `users.js`, `disasters.js`, `volunteer.js`) & Centralized Frontend API.
+- [x] **Architecture:** Modular Backend Routes (`/api/auth`, `/api/users`, etc.) & Centralized Frontend API.
 - [x] **Database:** Standardized PostgreSQL schema with synchronized user preferences.
 
 ### **Phase 1: UI/UX Refinement**
@@ -130,11 +131,14 @@ JWT_SECRET=your_super_secret_key
 - [x] **Role-Based Access Control (RBAC):** Database support for `Admin` vs `User` roles.
 - [x] **Admin Reporting:** Interactive map interface for admins to publish new disaster alerts.
 - [x] **Admin Controls:** Conditional rendering of "Create Event" and "Manage Reports" buttons.
+- [x] **Password Recovery:** Full "Forgot Password" flow with secure email links and token validation.
+- [x] **Brute-Force Protection:** Implemented Rate Limiting (express-rate-limit) on login/signup endpoints.
 
 ## 🛠️ Tech Stack
 
 - **Frontend:** React (Vite), Tailwind CSS, Leaflet Maps, Framer Motion (animations), Lucide React (icons), i18next (translation).
-- **Backend:** Node.js, Express, PostgreSQL.
+- **Backend:** Node.js, Express, PostgreSQL, Nodemailer (OAuth 2.0).
+- **Security:** BCrypt, JWT, Express Rate Limit.
 
 ## 🔮 Coming Soon / Next Steps
 

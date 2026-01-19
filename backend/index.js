@@ -14,27 +14,19 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 
-// ✅ Trust Proxy: Required for Rate Limiting to work correctly behind load balancers (Heroku, AWS, etc.)
 app.set('trust proxy', 1);
-
 app.use(cors());
 app.use(express.json());
 
 // --- 🛡️ SECURITY: RATE LIMITERS ---
-// 1. Strict Limiter for Auth (Login/Signup)
-// Only allows 5 attempts per 15 minutes to stop brute-force password guessing
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 5,
-  message: {
-    error: 'Too many login attempts, please try again after 15 minutes.',
-  },
+  message: { error: 'Too many login attempts, please try again after 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-// 2. General Limiter for API
-// Allows 100 requests per 15 minutes (Good for weather data, profile fetching)
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -42,18 +34,20 @@ const apiLimiter = rateLimit({
 });
 
 // --- APPLY LIMITERS ---
-// We apply the strict limiter specifically to the auth routes
-app.use('/signup', authLimiter);
-app.use('/login', authLimiter);
-app.use('/change-password', authLimiter); // Protect this too!
+app.use('/api/auth/signup', authLimiter);
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/forgot-password', authLimiter);
 
-// Apply general limiter to other API routes
 app.use('/api/', apiLimiter);
 
 // --- USE ROUTERS ---
-app.use('/', authRoutes); // Handles /login, /signup, /change-password
-app.use('/', userRoutes); // Handles /api/users...
-app.use('/api', eventRoutes); // Handles /api/disasters and /api/volunteer
+app.use('/api/auth', authRoutes);
+
+// 2. User Routes (Mounted at /)
+app.use('/', userRoutes);
+
+// 3. Event Routes (Mounted at /api)
+app.use('/api', eventRoutes);
 
 // Test Route
 app.get('/test-db', async (request, response) => {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, AlertCircle, Loader2, CheckCircle2, Check } from 'lucide-react';
 import { authService } from '../services/api';
 
@@ -306,9 +307,9 @@ const AuthForm = ({ onAuthSuccess }) => {
 
         {isLogin && (
           <div className="mt-4 text-center">
-            <a href="/reset-password" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">
+            <Link to="/reset-password" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">
               {t('auth.forgotPassword')}
-            </a>
+            </Link>
           </div>
         )}
       </div>
