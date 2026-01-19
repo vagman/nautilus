@@ -43,8 +43,8 @@ app.use('/api/', apiLimiter);
 // --- USE ROUTERS ---
 app.use('/api/auth', authRoutes);
 
-// 2. User Routes (Mounted at /)
-app.use('/', userRoutes);
+// ✅ FIX: Mount this at '/api/users' so it matches your frontend calls
+app.use('/api/users', userRoutes);
 
 // 3. Event Routes (Mounted at /api)
 app.use('/api', eventRoutes);

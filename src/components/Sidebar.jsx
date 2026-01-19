@@ -5,11 +5,15 @@ import {
   Settings as SettingsIcon,
   LogOut,
   User,
-  X,
+  HelpCircle,
+  X as CloseIcon,
   AlertTriangle,
   Users,
   FilePlus,
 } from 'lucide-react';
+
+import logoDark from '../assets/nautilus-dark.svg';
+import logoWhite from '../assets/nautilus-white.svg';
 
 const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
   const { t } = useTranslation();
@@ -34,16 +38,20 @@ const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
       {/* 1. Header with Logo */}
       <div className="p-6 flex items-center justify-between border-b border-gray-100 dark:border-[#333]">
         <div className="flex items-center gap-3 overflow-hidden">
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shrink-0 shadow-blue-500/30 shadow-lg">
-            N
-          </div>
+          {/* Show this in Light Mode */}
+          <img src={logoDark} alt="Nautilus Logo" className="w-10 h-10 object-contain dark:hidden shrink-0" />
+
+          {/* Show this in Dark Mode */}
+          <img src={logoWhite} alt="Nautilus Logo" className="w-10 h-10 object-contain hidden dark:block shrink-0" />
+
           <h1 className="font-bold text-xl text-gray-800 dark:text-white truncate tracking-tight">Nautilus</h1>
         </div>
+
         <button
           onClick={toggle}
           className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 text-gray-500 transition-colors md:hidden"
         >
-          <X size={20} />
+          <CloseIcon size={20} />
         </button>
       </div>
 
@@ -69,7 +77,6 @@ const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
         {/* 1. DISASTER MAP (Visible to Everyone) */}
         <NavLink to="/disasters" className={getLinkClass}>
           <AlertTriangle size={20} />
-          {/* ✅ Translated */}
           <span className="font-medium">{t('sidebar.disastersMap')}</span>
         </NavLink>
 
@@ -77,7 +84,6 @@ const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
         {user?.role === 'admin' && (
           <NavLink to="/admin/reports" className={getLinkClass}>
             <FilePlus size={20} />
-            {/* ✅ Translated */}
             <span className="font-medium">{t('sidebar.manageReports')}</span>
           </NavLink>
         )}
@@ -85,15 +91,16 @@ const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
         {/* 3. VOLUNTEER (Visible to Everyone) */}
         <NavLink to="/volunteer" className={getLinkClass}>
           <Users size={20} />
-          {/* ✅ Translated */}
           <span className="font-medium">{t('sidebar.volunteerHub')}</span>
         </NavLink>
 
-        {/* SETTINGS SECTION */}
-        <div className="pt-6 pb-2 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-4 mt-2">
-          {t('sidebar.settings')}
-        </div>
+        {/* HELP */}
+        <NavLink to="/help" className={getLinkClass}>
+          <HelpCircle size={20} />
+          <span className="font-medium">{t('help.title')}</span>
+        </NavLink>
 
+        {/* SETTINGS SECTION */}
         <NavLink to="/settings" className={getLinkClass}>
           <SettingsIcon size={20} />
           <span className="font-medium">{t('sidebar.settings')}</span>

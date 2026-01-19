@@ -2,17 +2,25 @@
   "auth": {
     "login": "Log In",
     "signup": "Sign Up",
+    "appDescription": "Your advanced dashboard for environmental monitoring and disaster management.",
     "welcomeBack": "Welcome Back",
     "createAccount": "Create Account",
-    "appDescription": "Your advanced dashboard for real-time weather monitoring and environmental safety.",
     "email": "Email Address",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "firstName": "First Name",
     "lastName": "Last Name",
-    "loginButton": "Sign In",
+    "loginButton": "Log In",
     "signupButton": "Create Account",
-    "forgotPassword": "Forgot your password?",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "setNewPassword": "Set New Password",
+    "emailInstruction": "Enter your email and we'll send you a link.",
+    "sendLink": "Send Reset Link",
+    "linkSent": "If an account exists, we sent a link!",
+    "backToLogin": "Back to Login",
+    "successChange": "Password Changed!",
+    "redirecting": "Redirecting you to login...",
     "passwordsDoNotMatch": "Passwords do not match",
     "passwordTooShort": "Password must be at least 6 characters",
     "invalidCredentials": "Invalid credentials",
@@ -20,8 +28,8 @@
     "authenticationFailed": "Authentication failed",
     "passwordRequirements": "Password requirements:",
     "reqLength": "At least 8 characters",
-    "reqUpper": "At least 1 capital letter (A-Z)",
-    "reqNumber": "At least 1 number (0-9)",
+    "reqUpper": "At least 1 uppercase letter",
+    "reqNumber": "At least 1 number",
     "reqSymbol": "At least 1 symbol (!@#$...)",
     "passwordsMatch": "Passwords match"
   },
@@ -29,12 +37,16 @@
     "cancel": "Cancel",
     "deleting": "Deleting...",
     "error": "Error",
-    "appTitle": "Management of Environmental Phenomena and Natural Disasters",
+    "appTitle": "Nautilus",
     "loading": "Loading location and weather data..."
   },
   "profile": {
     "title": "My Profile",
     "settings": "Profile Settings",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "updatePassword": "Update Password",
     "firstName": "First Name",
     "lastName": "Last Name",
     "email": "Email",
@@ -44,44 +56,45 @@
   },
   "settings": {
     "title": "Settings",
-    "desc": "Manage your application preferences and appearance.",
+    "desc": "Manage your preferences and application appearance.",
     "appearance": "Appearance",
-    "appearanceDesc": "Customize how Nautilus looks on your device.",
+    "appearanceDesc": "Customize the look and feel of Nautilus.",
     "language": "Language",
-    "languageDesc": "Select your preferred language interface."
+    "languageDesc": "Select the application language."
   },
   "deleteAccount": {
     "title": "⚠️ Delete Account",
+    "dangerZone": "Danger Zone",
     "confirmation": "Are you sure you want to delete your account?",
     "warningTitle": "Warning: This action cannot be undone.",
     "warningText": "All your data, settings, and preferences will be permanently removed from our database.",
-    "confirmButton": "Yes, Delete My Account"
+    "confirmButton": "Yes, Delete"
   },
   "footer": {
-    "providedBy": "Weather data provided for free by"
+    "providedBy": "Weather data provided free by"
   },
   "help": {
-    "title": "❓ Help Center",
+    "title": "Help Center",
     "close": "Close",
-    "q1": "What is this app used for?",
-    "a1": "Nautilus is a comprehensive dashboard designed for monitoring environmental phenomena and natural disasters. It allows users to visualize weather patterns, track storms in real-time using an interactive map, and receive clothing or safety recommendations based on forecast data.",
-    "q2": "Where can I contact for help?",
-    "a2_prefix": "For technical support or feature requests, please email our support team at",
+    "q1": "What is this app for?",
+    "a1": "Nautilus is a comprehensive dashboard designed for monitoring environmental phenomena and natural disasters. It allows users to view weather patterns, track storms in real-time, and receive safety recommendations.",
+    "q2": "Where can I contact support?",
+    "a2_prefix": "For technical support or feature requests, email the support team at",
     "q3": "How does the radius slider work?",
-    "a3": "The radius slider adjusts the area of interest around your current location. The app calculates weather data for multiple points along the edge of this circle to give you a more accurate 'surrounding' forecast, rather than just a single point prediction."
+    "a3": "The radius slider adjusts the area of interest around your location. The app calculates weather data for multiple points along this circle to give you a more accurate 'surrounding area' forecast."
   },
   "about": {
     "title": "About Nautilus",
-    "description": "Nautilus is an advanced environmental monitoring dashboard designed to provide real-time weather data and natural disaster alerts. Built as part of a thesis project, it leverages geolocation and open weather APIs to ensure user safety through timely forecasts.",
+    "description": "Nautilus is an advanced environmental monitoring dashboard. Built as part of a thesis project, it leverages geolocation and weather APIs to ensure user safety through timely predictions.",
     "developer": "Developer",
     "license": "License",
-    "stack": "Stack",
-    "build": "Build",
+    "stack": "Tech Stack",
+    "build": "Build Version",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "github": "GitHub Repo",
+    "github": "GitHub Repository",
     "rights": "All rights reserved.",
-    "unauthorized": "Unauthorized duplication or distribution of this software is strictly prohibited."
+    "unauthorized": "Unauthorized copying or distribution of this software is strictly prohibited."
   },
   "logout": {
     "title": "Confirm Logout",
@@ -90,27 +103,27 @@
     "cancel": "Cancel"
   },
   "forecast": {
-    "title": "🗓️ 5-Day Weather Forecast",
+    "title": "🗓️ 5-Day Forecast",
     "radiusLabel": "Forecast Radius",
     "min": "Min",
     "max": "Max",
-    "adviceTitle": "👕 What to Wear / Prepare For:",
-    "heat": "🔥 Very hot — wear light clothes, drink water, avoid sun",
-    "rain": "☔ Rain expected — bring umbrella or raincoat",
+    "adviceTitle": "👕 What to wear / Watch out for:",
+    "heat": "🔥 Very hot — light clothes, water, avoid sun",
+    "rain": "☔ Rain expected — take an umbrella or raincoat",
     "wind": "💨 Windy — consider a windbreaker",
-    "sunny": "🧢 Sunny — wear a hat, sunglasses, and sunscreen",
-    "cold": "🧥 Cold — bring a jacket or coat",
+    "sunny": "🧢 Sunny — hat, sunglasses, and sunscreen",
+    "cold": "🧥 Cold — take a jacket or coat",
     "mild": "🙂 Mild weather — dress comfortably"
   },
   "sidebar": {
     "menu": "Menu",
     "dashboard": "Weather Map",
-    "disastersMap": "Disasters Map",
-    "manageReports": "Manage Reports",
+    "disastersMap": "Disaster Map",
+    "manageReports": "Create Report",
     "volunteerHub": "Volunteer Hub",
     "settings": "Settings",
-    "themeLight": "Light Mode",
-    "themeDark": "Dark Mode",
+    "themeLight": "Light Theme",
+    "themeDark": "Dark Theme",
     "logout": "Log Out"
   },
   "volunteer": {
@@ -122,17 +135,38 @@
       "titlePlaceholder": "Event Title",
       "descPlaceholder": "Description",
       "locationPlaceholder": "Location",
-      "durationPlaceholder": "Duration (e.g. 2 hours)",
+      "durationPlaceholder": "Duration (e.g., 2 hours)",
       "imagePlaceholder": "Image URL (http://...)",
-      "toolsPlaceholder": "Select Needed Tools...",
-      "toolGloves": "Gloves & Trash Bags",
+      "toolsPlaceholder": "Select Required Tools...",
+      "toolGloves": "Gloves & Bags",
       "toolShovels": "Shovels & Boots",
-      "toolWater": "Water & Canned Food",
-      "toolMedical": "First Aid / Medical Kits",
-      "publishButton": "Publish Event"
+      "toolWater": "Water & Food",
+      "toolMedical": "First Aid Kit",
+      "publishButton": "Publish"
     },
     "noEvents": "No volunteer events found. Check back later!",
     "needs": "Needs",
     "viewDetails": "View Details"
+  },
+  "disasters": {
+    "title": "Natural Disasters Map",
+    "subtitle": "Real-time incident monitoring.",
+    "filterType": "Event Type",
+    "filterSeverity": "Severity",
+    "types": {
+      "fire": "Wildfire",
+      "flood": "Flood",
+      "earthquake": "Earthquake",
+      "storm": "Severe Storm",
+      "heatwave": "Heatwave"
+    },
+    "severity": {
+      "low": "Low",
+      "moderate": "Moderate",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "reportButton": "Report Incident",
+    "noDisasters": "No active incidents reported at this time."
   }
 }

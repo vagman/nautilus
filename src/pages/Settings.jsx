@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-// 1. Removed 'Github' from here to stop the warning
-import { Moon, Sun, Monitor, Languages, Check, Info } from 'lucide-react';
+import { userService } from '../services/api';
+import DeleteAccountModal from '../components/DeleteAccountModal';
+import { Moon, Sun, Monitor, Languages, Check, Info, Trash2, AlertTriangle } from 'lucide-react';
 import ReactCountryFlag from 'react-country-flag';
 
-// 2. Custom Github Icon Component (Replica of the deprecated one)
 const GithubIcon = ({ size = 24, className = '' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -23,20 +25,79 @@ const GithubIcon = ({ size = 24, className = '' }) => (
   </svg>
 );
 
-const Settings = () => {
+// ✅ 1. Accept user and updateUser props
+const Settings = ({ user, updateUser }) => {
   const { t, i18n } = useTranslation();
   const { darkMode, toggleTheme } = useTheme();
+  const navigate = useNavigate();
 
-  const changeLanguage = lang => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // ✅ 2. NEW: Handle Language Change (UI + DB)
+  const handleLanguageChange = async lang => {
+    // A. Visual Update
     i18n.changeLanguage(lang);
+
+    // B. API Call & State Sync
+    if (user && user.id) {
+      try {
+        await userService.updateLanguage(user.id, lang);
+        // Update the user object in App.js so it persists
+        updateUser({ ...user, language_preference: lang });
+      } catch (error) {
+        console.error('Failed to save language preference', error);
+      }
+    }
+  };
+
+  // ✅ 3. NEW: Handle Theme Change (UI + DB)
+  const handleThemeChange = async newThemeStr => {
+    // A. Visual Update (Only toggle if different)
+    const isDark = newThemeStr === 'dark';
+    if (isDark !== darkMode) {
+      toggleTheme();
+    }
+
+    // B. API Call & State Sync
+    if (user && user.id) {
+      try {
+        await userService.updateTheme(user.id, newThemeStr);
+        // Update the user object in App.js so it persists
+        updateUser({ ...user, theme_preference: newThemeStr });
+      } catch (error) {
+        console.error('Failed to save theme preference', error);
+      }
+    }
+  };
+
+  // --- DELETE ACCOUNT LOGIC ---
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      // Use user.id from props if available, or fallback to localStorage
+      const userId = user?.id || JSON.parse(localStorage.getItem('user'))?.id;
+      if (!userId) return;
+
+      await userService.deleteAccount(userId);
+
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      navigate('/login');
+    } catch (error) {
+      console.error('Failed to delete account:', error);
+      alert('Error deleting account');
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Page Header */}
+    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
       <div className="mb-8 border-b border-gray-200 dark:border-[#333] pb-6">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">{t('sidebar.settings')}</h1>
-        <p className="text-gray-500 dark:text-gray-400">Manage your application preferences and appearance.</p>
+        <p className="text-gray-500 dark:text-gray-400">{t('settings.desc')}</p>
       </div>
 
       <div className="grid gap-6">
@@ -47,15 +108,15 @@ const Settings = () => {
               <Monitor size={24} />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white">Appearance</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Customize how Nautilus looks on your device.</p>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('settings.appearance')}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('settings.appearanceDesc')}</p>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Light Mode Button */}
             <button
-              onClick={() => darkMode && toggleTheme()}
+              onClick={() => handleThemeChange('light')} // ✅ Uses new handler
               className={`flex-1 flex items-center justify-between p-4 rounded-xl border-2 transition-all cursor-pointer ${
                 !darkMode
                   ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/10'
@@ -75,7 +136,7 @@ const Settings = () => {
 
             {/* Dark Mode Button */}
             <button
-              onClick={() => !darkMode && toggleTheme()}
+              onClick={() => handleThemeChange('dark')} // ✅ Uses new handler
               className={`flex-1 flex items-center justify-between p-4 rounded-xl border-2 transition-all cursor-pointer ${
                 darkMode
                   ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/10'
@@ -102,15 +163,15 @@ const Settings = () => {
               <Languages size={24} />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white">Language</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Select your preferred language interface.</p>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('settings.language')}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('settings.languageDesc')}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* English Option */}
+            {/* English Button */}
             <button
-              onClick={() => changeLanguage('en')}
+              onClick={() => handleLanguageChange('en')} // ✅ Uses new handler
               className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all cursor-pointer ${
                 i18n.language === 'en'
                   ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/10'
@@ -128,9 +189,9 @@ const Settings = () => {
               {i18n.language === 'en' && <Check size={20} className="text-blue-600 dark:text-blue-400" />}
             </button>
 
-            {/* Greek Option */}
+            {/* Greek Button */}
             <button
-              onClick={() => changeLanguage('el')}
+              onClick={() => handleLanguageChange('el')} // ✅ Uses new handler
               className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all cursor-pointer ${
                 i18n.language === 'el'
                   ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/10'
@@ -150,18 +211,43 @@ const Settings = () => {
           </div>
         </div>
 
-        {/* --- ABOUT SECTION --- */}
+        {/* DELETE ACCOUNT */}
+        <div className="bg-red-50 dark:bg-red-900/10 rounded-2xl p-6 shadow-sm border border-red-100 dark:border-red-900/30">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-xl text-red-600 dark:text-red-400">
+              <AlertTriangle size={24} />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('deleteAccount.title')}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('deleteAccount.dangerZone')}</p>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-[#252535] p-5 rounded-xl border border-gray-200 dark:border-red-900/30">
+            <div className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="font-semibold mb-1">{t('deleteAccount.warningTitle')}</p>
+              <p className="text-xs opacity-70">{t('deleteAccount.warningText')}</p>
+            </div>
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="cursor-pointer px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow-md transition-colors flex items-center gap-2 whitespace-nowrap"
+            >
+              <Trash2 size={18} />
+              {t('deleteAccount.confirmButton')}
+            </button>
+          </div>
+        </div>
+
+        {/* ABOUT SECTION */}
         <div className="bg-white dark:bg-[#252535] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-[#333]">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-xl text-purple-600 dark:text-purple-400">
               <Info size={24} />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white">About Application</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Version info and credits.</p>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('about.title')}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('about.description')}</p>
             </div>
           </div>
-
           <div className="bg-gray-50 dark:bg-[#2d2d3d] p-5 rounded-xl border border-gray-200 dark:border-[#444]">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
@@ -170,12 +256,7 @@ const Settings = () => {
               <h3 className="font-bold text-lg text-gray-800 dark:text-white">Nautilus</h3>
               <span className="bg-gray-200 dark:bg-gray-700 text-xs px-2 py-0.5 rounded-full font-mono">v1.0.0</span>
             </div>
-
-            <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
-              A comprehensive disaster management and volunteering platform designed to connect communities and provide
-              real-time environmental alerts.
-            </p>
-
+            <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">{t('about.description')}</p>
             <div className="flex items-center gap-4 text-sm pt-4 border-t border-gray-200 dark:border-[#444]">
               <a
                 href="https://github.com/vagman/nautilus"
@@ -183,7 +264,6 @@ const Settings = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer"
               >
-                {/* 3. Using the custom icon here */}
                 <GithubIcon size={16} />
                 <span>View Source</span>
               </a>
@@ -193,6 +273,13 @@ const Settings = () => {
           </div>
         </div>
       </div>
+
+      <DeleteAccountModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteAccount}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 };

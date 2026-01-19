@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, AlertCircle, Loader2, CheckCircle2, Check } from 'lucide-react';
+
 import { authService } from '../services/api';
 
 const AuthForm = ({ onAuthSuccess }) => {

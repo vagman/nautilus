@@ -12,10 +12,11 @@ import Dashboard from '../pages/Dashboard';
 import Profile from '../pages/Profile';
 import ChangePassword from '../pages/ChangePassword';
 import Settings from '../pages/Settings';
-import ResetPassword from '../pages/ResetPassword'; // ✅ Correctly Imported
+import ResetPassword from '../pages/ResetPassword';
 import Disasters from '../pages/Disasters';
 import Volunteer from '../pages/Volunteer';
 import AdminReports from '../pages/AdminReports';
+import Help from '../pages/Help';
 
 function App() {
   const { clearUserThemeSync } = useTheme();
@@ -62,7 +63,11 @@ function App() {
           <Route element={<DashboardLayout user={user} onLogout={logout} />}>
             <Route path="/" element={<Dashboard user={user} />} />
             <Route path="/profile" element={<Profile user={user} setUser={handleUpdateUser} />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/settings" element={<Settings user={user} updateUser={handleUpdateUser} />} />
+
+            {/* Help Page Route */}
+            <Route path="/help" element={<Help />} />
+
             <Route path="/change-password" element={<ChangePassword user={user} onLogout={logout} />} />
             <Route path="/disasters" element={<Disasters />} />
             <Route path="/volunteer" element={<Volunteer user={user} />} />

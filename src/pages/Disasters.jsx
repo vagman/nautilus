@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import RadiusSlider from '../components/RadiusSlider';
-import Footer from '../components/Footer'; // ✅ IMPORTED FOOTER
-import axios from 'axios';
+import Footer from '../components/Footer';
+
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 // --- 1. DEFINE ICONS ---
@@ -59,6 +62,7 @@ const RecenterMap = ({ center }) => {
 };
 
 const Disasters = () => {
+  const { t } = useTranslation();
   const [radius, setRadius] = useState(10000);
   const [disasters, setDisasters] = useState([]);
   const [selectedDisaster, setSelectedDisaster] = useState(null);
@@ -99,7 +103,7 @@ const Disasters = () => {
       <div className="flex-1 flex flex-col gap-6">
         {/* HEADER & SLIDER */}
         <div className="flex flex-col items-center justify-center space-y-4 pt-2">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Active Disasters</h1>
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{t('disasters.title')}</h1>
           <div className="w-full max-w-3xl">
             <RadiusSlider value={radius} onChange={setRadius} onFinalChange={() => {}} />
           </div>

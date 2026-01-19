@@ -8,6 +8,7 @@ function DeleteAccountModal({ isOpen, onClose, onConfirm, isDeleting }) {
     <Modal isOpen={isOpen} onClose={onClose} title={t('deleteAccount.title')}>
       <div className="space-y-4">
         <p className="text-gray-600 dark:text-gray-300">{t('deleteAccount.confirmation')}</p>
+
         <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
           <p className="text-sm text-red-600 dark:text-red-400 font-bold">{t('deleteAccount.warningTitle')}</p>
           <p className="text-sm text-red-600 dark:text-red-400 mt-1">{t('deleteAccount.warningText')}</p>

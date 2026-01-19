@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import RadiusSlider from '../components/RadiusSlider';
 import Map from '../components/Map';
 import ForecastList from '../components/ForecastList';
