@@ -9,11 +9,16 @@ function Profile({ user, setUser }) {
   const { t } = useTranslation();
   const fileInputRef = useRef(null);
 
-  // Local state for the form inputs
+  // Local state for text inputs
   const [formData, setFormData] = useState({
     first_name: user.first_name || '',
     last_name: user.last_name || '',
   });
+
+  // State for the new file to upload
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(user.profile_picture || DEFAULT_AVATAR);
+
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
@@ -21,41 +26,48 @@ function Profile({ user, setUser }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Convert image to Base64 and upload immediately
-  const handleImageUpload = e => {
+  // ✅ Handle File Selection (Just preview, don't upload yet)
+  const handleImageChange = e => {
     const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64String = reader.result;
-      try {
-        const updatedUser = await userService.updateProfile(user.id, {
-          ...formData,
-          profile_picture: base64String,
-        });
-        setUser(updatedUser); // Update Global State
-        localStorage.setItem('user', JSON.stringify(updatedUser)); // Persist
-      } catch (err) {
-        console.error('Failed to upload image', err);
-      }
-    };
-    reader.readAsDataURL(file);
+    if (file) {
+      setSelectedFile(file);
+      // Create a temporary URL for instant preview
+      setPreviewImage(URL.createObjectURL(file));
+    }
   };
 
+  // ✅ Handle Submit (Send Text + File together)
   const handleSubmit = async e => {
     e.preventDefault();
     setIsLoading(true);
     setMessage(null);
+
     try {
-      const updatedUser = await userService.updateProfile(user.id, formData);
+      // Create FormData object
+      const data = new FormData();
+      data.append('first_name', formData.first_name);
+      data.append('last_name', formData.last_name);
+      data.append('email', user.email); // ✅ FIX: Added email to FormData
+
+      // Only append the file if the user selected a new one
+      if (selectedFile) {
+        data.append('profile_picture', selectedFile);
+      }
+
+      // Send to backend
+      const updatedUser = await userService.updateProfile(user.id, data);
+
+      // Update global state & local storage
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
-      setMessage({ type: 'success', text: 'Profile updated successfully!' });
+
+      setMessage({ type: 'success', text: t('profile.updateSuccess') || 'Profile updated successfully!' });
+
+      // Reset file state
+      setSelectedFile(null);
     } catch (error) {
-      // ✅ FIX: Log the error so the variable is used
       console.error('Profile update error:', error);
-      setMessage({ type: 'error', text: 'Failed to update profile.' });
+      setMessage({ type: 'error', text: t('profile.updateError') || 'Failed to update profile.' });
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +83,7 @@ function Profile({ user, setUser }) {
       <div className="flex items-center gap-6 mb-8">
         <div className="relative group w-24 h-24">
           <img
-            src={user.profile_picture || DEFAULT_AVATAR}
+            src={previewImage}
             alt="Profile"
             className="w-full h-full rounded-full object-cover border-4 border-gray-100 dark:border-[#444] shadow-md"
           />
@@ -84,12 +96,13 @@ function Profile({ user, setUser }) {
         </div>
 
         <div>
-          <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} />
+          <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
           <button
+            type="button"
             onClick={() => fileInputRef.current.click()}
             className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold hover:bg-blue-100 transition-colors"
           >
-            Upload New Picture
+            {t('profile.uploadPhoto') || 'Upload New Picture'}
           </button>
         </div>
       </div>
@@ -98,7 +111,9 @@ function Profile({ user, setUser }) {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">First Name</label>
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+              {t('profile.firstName') || 'First Name'}
+            </label>
             <input
               type="text"
               name="first_name"
@@ -108,7 +123,9 @@ function Profile({ user, setUser }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+              {t('profile.lastName') || 'Last Name'}
+            </label>
             <input
               type="text"
               name="last_name"
@@ -133,7 +150,7 @@ function Profile({ user, setUser }) {
             disabled={isLoading}
             className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-bold rounded-lg shadow-md transition-transform active:scale-95"
           >
-            {isLoading ? 'Saving...' : 'Save Changes'}
+            {isLoading ? t('common.saving') || 'Saving...' : t('profile.save') || 'Save Changes'}
           </button>
         </div>
       </form>

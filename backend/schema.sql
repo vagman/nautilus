@@ -8,6 +8,7 @@ CREATE TABLE users (
   password_hash VARCHAR(255) NOT NULL,
   first_name VARCHAR(100),
   last_name VARCHAR(100),
+  role VARCHAR(20) DEFAULT 'user',
   profile_picture TEXT,
   theme_preference VARCHAR(10) DEFAULT 'light',
   language_preference VARCHAR(5) DEFAULT 'en',

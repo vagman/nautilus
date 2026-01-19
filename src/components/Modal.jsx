@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 const Modal = ({ isOpen, onClose, title, children }) => {
-  // Prevent scrolling on the background when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';

@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import process from 'process';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { query } from './database.js';
 
 import authRoutes from './routes/authRoutes.js';
@@ -11,12 +13,21 @@ import eventRoutes from './routes/eventRoutes.js';
 
 dotenv.config();
 
+// Fix for __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 
 app.set('trust proxy', 1);
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// ✅ CRITICAL: Serve Uploaded Files Publicly
+// This allows the frontend to view images at http://localhost:4000/uploads/volunteer/image.jpg
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- 🛡️ SECURITY: RATE LIMITERS ---
 const authLimiter = rateLimit({
@@ -42,11 +53,7 @@ app.use('/api/', apiLimiter);
 
 // --- USE ROUTERS ---
 app.use('/api/auth', authRoutes);
-
-// ✅ FIX: Mount this at '/api/users' so it matches your frontend calls
 app.use('/api/users', userRoutes);
-
-// 3. Event Routes (Mounted at /api)
 app.use('/api', eventRoutes);
 
 // Test Route

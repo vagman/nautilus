@@ -1,4 +1,3 @@
-// standardized success response
 export const sendSuccess = (res, statusCode, message, data) => {
   const statusCodes = {
     200: 'OK',
@@ -11,16 +10,15 @@ export const sendSuccess = (res, statusCode, message, data) => {
       code: statusCode,
       message: message || statusCodes[statusCode] || 'Success',
     },
-    data: data, // All actual data goes inside this 'data' object
+    data: data,
   });
 };
 
-// standardized error response
 export const sendError = (res, statusCode, message) => {
   res.status(statusCode).json({
     status: {
       code: statusCode,
-      message: 'Error',
+      message: message || 'Error',
     },
     error: message,
   });

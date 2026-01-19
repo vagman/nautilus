@@ -52,7 +52,8 @@
     "email": "Email",
     "uploadPhoto": "Upload Photo",
     "save": "Save Changes",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "updateSuccess": "Profile updated successfully!"
   },
   "settings": {
     "title": "Settings",
@@ -116,9 +117,9 @@
     "mild": "🙂 Mild weather — dress comfortably"
   },
   "sidebar": {
-    "menu": "Menu",
     "dashboard": "Weather Map",
-    "disastersMap": "Disaster Map",
+    "profile": "Profile",
+    "disasterMap": "Disaster Map",
     "manageReports": "Create Report",
     "volunteerHub": "Volunteer Hub",
     "settings": "Settings",

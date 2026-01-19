@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Moon, Sun, Monitor, Languages, Check, Info, Trash2, AlertTriangle } from 'lucide-react';
+import ReactCountryFlag from 'react-country-flag';
+
 import { useTheme } from '../context/ThemeContext';
 import { userService } from '../services/api';
 import DeleteAccountModal from '../components/DeleteAccountModal';
-import { Moon, Sun, Monitor, Languages, Check, Info, Trash2, AlertTriangle } from 'lucide-react';
-import ReactCountryFlag from 'react-country-flag';
+import logoDark from '../assets/nautilus-dark.svg';
+import logoWhite from '../assets/nautilus-white.svg';
 
 const GithubIcon = ({ size = 24, className = '' }) => (
   <svg
@@ -245,13 +248,17 @@ const Settings = ({ user, updateUser }) => {
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('about.title')}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('about.description')}</p>
             </div>
           </div>
           <div className="bg-gray-50 dark:bg-[#2d2d3d] p-5 rounded-xl border border-gray-200 dark:border-[#444]">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-                N
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold">
+                <img src={logoDark} alt="Nautilus Logo" className="w-10 h-10 object-contain dark:hidden shrink-0" />
+                <img
+                  src={logoWhite}
+                  alt="Nautilus Logo"
+                  className="w-10 h-10 object-contain hidden dark:block shrink-0"
+                />
               </div>
               <h3 className="font-bold text-lg text-gray-800 dark:text-white">Nautilus</h3>
               <span className="bg-gray-200 dark:bg-gray-700 text-xs px-2 py-0.5 rounded-full font-mono">v1.0.0</span>

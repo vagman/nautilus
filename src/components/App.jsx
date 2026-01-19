@@ -21,7 +21,7 @@ import Help from '../pages/Help';
 function App() {
   const { clearUserThemeSync } = useTheme();
 
-  // ✅ 1. CRASH-PROOF USER STATE
+  // USER STATE
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem('user');
@@ -55,7 +55,7 @@ function App() {
         {/* --- Public Routes --- */}
         <Route path="/login" element={!user ? <AuthPage onAuthSuccess={setUser} /> : <Navigate to="/" />} />
 
-        {/* ✅ CRITICAL: This route handles both requesting the link AND resetting the password */}
+        {/* This route handles both requesting the link AND resetting the password */}
         <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* --- Protected Routes (Require Login) --- */}
@@ -75,7 +75,6 @@ function App() {
           </Route>
         </Route>
 
-        {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

@@ -1,15 +1,11 @@
-# 1. Force SQL to be detected and counted
 *.sql linguist-detectable=true
 *.sql linguist-language=SQL
 
-# 2. Ignore ALL JSON files (Translations, package-lock, etc.)
 *.json linguist-vendored
 
-# 3. Ignore CSS/Styles from stats (Optional, helps SQL percentage rise)
 *.css linguist-vendored
 *.scss linguist-vendored
 
-# 4. Ignore Config JS files (Boilerplate code)
 vite.config.js linguist-vendored
 postcss.config.js linguist-vendored
 eslint.config.js linguist-vendored
