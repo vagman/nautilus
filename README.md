@@ -1,6 +1,6 @@
-# 🌦️ Weather Alert App
+# 🌦️ Nautilus: Advanced Weather & Disaster Dashboard
 
-A weather-based web application that fetches weather forecasts and provides alerts for extreme weather conditions. It also suggests appropriate clothing or accessories based on the forecast.
+Nautilus is a comprehensive full-stack environmental monitoring platform. It combines real-time weather forecasting with a community-driven disaster management system, allowing users to stay safe and coordinate volunteer efforts.
 
 ---
 
@@ -17,13 +17,25 @@ A weather-based web application that fetches weather forecasts and provides aler
 
 ---
 
-## 🛠️ Technologies Used
+## 🛠️ Tech Stack
 
-- **Frontend**: React (Vite), Context API, CSS Modules, Leaflet
-- **Backend**: Node.js + Express.js (ES Modules)
-- **Database**: PostgreSQL
-- **Auth**: JWT (JSON Web Tokens)
-- **Styling**: CSS
+### Frontend
+
+- Framework: React (Vite)
+- Styling: Tailwind CSS + Framer Motion
+- State Management: Context API
+- Maps: Leaflet.js
+- Internationalization: i18next
+- Icons: Lucide React
+
+### Backend
+
+- Environment: Node.js + Express.js (ES Modules)
+- Database: PostgreSQL
+- File Handling: Multer (Local storage with safe-delete logic)
+- Authentication: JWT & BCrypt
+- Mailing: Nodemailer + Google OAuth 2.0
+- Security: Express Rate Limit & CORS
 
 ---
 
@@ -43,7 +55,7 @@ npm install          # Install dependencies
 npm run dev          # Start frontend server (http://localhost:5173)
 ```
 
-You must create a .env file in the root project directory:
+You must create a `.env` file in the root project directory:
 
 ```shell
 VITE_WEATHER_API_KEY=your_openweathermap_api_key
@@ -57,7 +69,7 @@ npm install
 npm run dev
 ```
 
-Create a .env file inside the weather-app-backend/ folder:
+Create a `.env` file inside the weather-app-backend/ folder:
 
 ```shell
 PORT=4000
@@ -86,14 +98,14 @@ JWT_SECRET=your_super_secret_key
 
 ### 🧪 Useful Commands
 
-| Task                      | Command                                                    |
-| ------------------------- | ---------------------------------------------------------- |
-| Start Frontend            | `npm run dev (in project root)`                            |
-| Start Backend             | `cd weather-app-backend && npm run dev` OR `node index.js` |
-| Build Frontend            | `npm run build`                                            |
-| Install Frontend Packages | `npm install`                                              |
-| Install Backend Packages  | `cd weather-app-backend && npm install`                    |
-| Test DB Connection        | `curl http://localhost:4000/test-db`                       |
+| Task                      | Command                                 |
+| ------------------------- | --------------------------------------- |
+| Start Frontend            | `npm run dev (in project root)`         |
+| Start Backend             | `cd weather-app-backend && npm run dev` |
+| Build Frontend            | `npm run build`                         |
+| Install Frontend Packages | `npm install`                           |
+| Install Backend Packages  | `cd weather-app-backend && npm install` |
+| Test DB Connection        | `curl http://localhost:4000/test-db`    |
 
 ### 📝 Notes
 

@@ -11,25 +11,24 @@ const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-router.put('/:id', protect, uploadProfile.single('profile_picture'), async (req, res) => {
+router.put('/:id', protect, uploadProfile.single('profile_image'), async (request, response) => {
   try {
-    const { first_name, last_name, email } = req.body;
-    const userId = req.params.id;
+    const { first_name, last_name, email } = request.body;
+    const userId = request.params.id;
 
     const userCheck = await query('SELECT * FROM users WHERE id = $1', [userId]);
     if (userCheck.rows.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
+      return response.status(404).json({ error: 'User not found' });
     }
 
     const oldUser = userCheck.rows[0];
-    let profilePath = oldUser.profile_picture;
+    let profilePath = oldUser.profile_image;
 
-    if (req.file) {
-      // ✅ IMPROVED SAFE DELETION
+    if (request.file) {
       // Only run if there's an existing string that looks like a local upload path
-      if (typeof oldUser.profile_picture === 'string' && oldUser.profile_picture.includes('/uploads/profiles/')) {
+      if (typeof oldUser.profile_image === 'string' && oldUser.profile_image.includes('/uploads/profiles/')) {
         try {
-          const oldFileName = oldUser.profile_picture.split('/').pop();
+          const oldFileName = oldUser.profile_image.split('/').pop();
           const oldFilePath = path.join(__dirname, '..', 'uploads', 'profiles', oldFileName);
 
           // Use synchronous existsCheck to prevent race conditions during the update
@@ -37,19 +36,19 @@ router.put('/:id', protect, uploadProfile.single('profile_picture'), async (req,
             fs.unlinkSync(oldFilePath);
             console.log(`🗑️ Deleted old file: ${oldFileName}`);
           }
-        } catch (err) {
-          console.warn('⚠️ Could not delete old file, but continuing update:', err.message);
+        } catch (error) {
+          console.warn('⚠️ Could not delete old file, but continuing update:', error.message);
         }
       }
       // Set new image path
-      profilePath = `http://localhost:4000/uploads/profiles/${req.file.filename}`;
+      profilePath = `http://localhost:4000/uploads/profiles/${request.file.filename}`;
     }
 
     const updateQuery = `
       UPDATE users 
-      SET first_name = $1, last_name = $2, email = $3, profile_picture = $4
+      SET first_name = $1, last_name = $2, email = $3, profile_image = $4
       WHERE id = $5
-      RETURNING id, first_name, last_name, email, role, profile_picture, theme_preference, language_preference
+      RETURNING id, first_name, last_name, email, role, profile_image, theme_preference, language_preference
     `;
 
     const result = await query(updateQuery, [
@@ -60,48 +59,48 @@ router.put('/:id', protect, uploadProfile.single('profile_picture'), async (req,
       userId,
     ]);
 
-    res.json(result.rows[0]);
+    response.json(result.rows[0]);
   } catch (error) {
     console.error('Update Profile Error:', error);
-    res.status(500).json({ error: 'Server error updating profile' });
+    response.status(500).json({ error: 'Server error updating profile' });
   }
 });
 
 // UPDATE LANGUAGE PREFERENCE
-router.put('/:id/language', protect, async (req, res) => {
+router.put('/:id/language', protect, async (request, response) => {
   try {
-    const { language } = req.body;
-    const userId = req.params.id;
+    const { language } = request.body;
+    const userId = request.params.id;
 
     const result = await query(
       'UPDATE users SET language_preference = $1 WHERE id = $2 RETURNING language_preference',
       [language, userId],
     );
 
-    if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
-    res.json(result.rows[0]);
+    if (result.rows.length === 0) return response.status(404).json({ error: 'User not found' });
+    response.json(result.rows[0]);
   } catch (error) {
     console.error('Language Update Error:', error);
-    res.status(500).json({ error: 'Server error' });
+    response.status(500).json({ error: 'Server error' });
   }
 });
 
 // UPDATE THEME PREFERENCE
-router.put('/:id/theme', protect, async (req, res) => {
+router.put('/:id/theme', protect, async (request, response) => {
   try {
-    const { theme } = req.body;
-    const userId = req.params.id;
+    const { theme } = request.body;
+    const userId = request.params.id;
 
     const result = await query('UPDATE users SET theme_preference = $1 WHERE id = $2 RETURNING theme_preference', [
       theme,
       userId,
     ]);
 
-    if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
-    res.json(result.rows[0]);
+    if (result.rows.length === 0) return response.status(404).json({ error: 'User not found' });
+    response.json(result.rows[0]);
   } catch (error) {
     console.error('Theme Update Error:', error);
-    res.status(500).json({ error: 'Server error' });
+    response.status(500).json({ error: 'Server error' });
   }
 });
 

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Moon, Sun, Monitor, Languages, Check, Info, Trash2, AlertTriangle } from 'lucide-react';
 import ReactCountryFlag from 'react-country-flag';
 
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../hooks/useThemes';
 import { userService } from '../services/api';
 import DeleteAccountModal from '../components/DeleteAccountModal';
 import logoDark from '../assets/nautilus-dark.svg';
@@ -28,7 +28,6 @@ const GithubIcon = ({ size = 24, className = '' }) => (
   </svg>
 );
 
-// ✅ 1. Accept user and updateUser props
 const Settings = ({ user, updateUser }) => {
   const { t, i18n } = useTranslation();
   const { darkMode, toggleTheme } = useTheme();
@@ -37,7 +36,7 @@ const Settings = ({ user, updateUser }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // ✅ 2. NEW: Handle Language Change (UI + DB)
+  // 2. NEW: Handle Language Change (UI + DB)
   const handleLanguageChange = async lang => {
     // A. Visual Update
     i18n.changeLanguage(lang);
@@ -54,7 +53,7 @@ const Settings = ({ user, updateUser }) => {
     }
   };
 
-  // ✅ 3. NEW: Handle Theme Change (UI + DB)
+  // 3. NEW: Handle Theme Change (UI + DB)
   const handleThemeChange = async newThemeStr => {
     // A. Visual Update (Only toggle if different)
     const isDark = newThemeStr === 'dark';

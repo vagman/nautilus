@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import process from 'process';
 import isEmail from 'validator/lib/isEmail.js';
 import { query } from '../database.js';
-import { sendSuccess, sendError } from '../utils/responseHandler.js'; // ✅ Import Helper
+import { sendSuccess, sendError } from '../utils/responseHandler.js';
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
@@ -13,7 +13,7 @@ const signToken = id => {
   });
 };
 
-// Helper function to send token (Like the snippet you shared)
+// Helper function to send token and user data
 const createSendToken = (user, statusCode, res, message) => {
   const token = signToken(user.id);
 
@@ -60,13 +60,12 @@ export const signup = async (req, res) => {
     const newUser = await query(
       `INSERT INTO users (first_name, last_name, email, password_hash) 
        VALUES ($1, $2, $3, $4) 
-       RETURNING id, first_name, last_name, email, theme_preference, language_preference, profile_picture`,
+       RETURNING id, first_name, last_name, email, theme_preference, language_preference, profile_image`,
       [first_name, last_name, email, hashedPassword],
     );
 
     console.log(`✅ SUCCESS: User created [ID: ${newUser.rows[0].id}]`);
 
-    // ✅ Use the professional helper
     createSendToken(newUser.rows[0], 201, res, 'Account created successfully');
   } catch (err) {
     console.error('🔥 Server Error during signup:', err);
@@ -75,29 +74,28 @@ export const signup = async (req, res) => {
 };
 
 // 2. LOGIN
-export const login = async (req, res) => {
+export const login = async (request, response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = request.body;
     console.log(`🔑 Login attempt for: ${email}`);
 
-    if (!email || !password) return sendError(res, 400, 'Provide email and password');
+    if (!email || !password) return sendError(response, 400, 'Provide email and password');
 
     // Check User
     const result = await query('SELECT * FROM users WHERE email = $1', [email]);
-    if (result.rows.length === 0) return sendError(res, 401, 'Invalid credentials');
+    if (result.rows.length === 0) return sendError(response, 401, 'Invalid credentials');
 
     const user = result.rows[0];
 
     // Verify Password
     const validPassword = await bcrypt.compare(password, user.password_hash);
-    if (!validPassword) return sendError(res, 401, 'Invalid credentials');
+    if (!validPassword) return sendError(response, 401, 'Invalid credentials');
 
     console.log(`✅ SUCCESS: User logged in [ID: ${user.id}]`);
 
-    // ✅ Use the professional helper
-    createSendToken(user, 200, res, 'Logged in successfully');
+    createSendToken(user, 200, response, 'Logged in successfully');
   } catch (err) {
     console.error('🔥 Server Error during login:', err);
-    sendError(res, 500, 'Server error during login');
+    sendError(response, 500, 'Server error during login');
   }
 };

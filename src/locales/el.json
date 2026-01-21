@@ -120,6 +120,7 @@
     "dashboard": "Χάρτης Καιρού",
     "profile": "Προφίλ",
     "disasterMap": "Χάρτης Καταστροφών",
+    "adminMap": "Διαχείριση Καταστροφών",
     "manageReports": "Δημιουργία Αναφοράς",
     "volunteerHub": "Κέντρο Εθελοντισμού",
     "settings": "Ρυθμίσεις",
@@ -137,7 +138,7 @@
       "descPlaceholder": "Περιγραφή",
       "locationPlaceholder": "Τοποθεσία",
       "durationPlaceholder": "Διάρκεια (π.χ. 2 ώρες)",
-      "imagePlaceholder": "URL Εικόνας (http://...)",
+      "imagePlaceholder": "Ανεβάστε μια εικόνα",
       "toolsPlaceholder": "Επιλέξτε Απαραίτητα Εργαλεία...",
       "toolGloves": "Γάντια & Σακούλες",
       "toolShovels": "Φτυάρια & Μπότες",
@@ -169,5 +170,17 @@
     },
     "reportButton": "Αναφορά Προβλήματος",
     "noDisasters": "Δεν υπάρχουν καταγεγραμμένα συμβάντα αυτή τη στιγμή."
+  },
+  "adminMap": {
+    "title": "Διαχείριση Καταστροφών",
+    "instruction": "Κάντε κλικ στο χάρτη για τοποθεσία και ανεβάστε αποδεικτικά στοιχεία.",
+    "titlePlaceholder": "Τίτλος",
+    "descPlaceholder": "Περιγραφή",
+    "uploadImg": "Μεταφόρτωση Εικόνας Συμβάντος",
+    "coordinates": "ΘΕΣΗ",
+    "publishBtn": "Δημοσίευση Αναφοράς",
+    "publishing": "Δημοσίευση...",
+    "successMsg": "Η αναφορά δημοσιεύτηκε με επιτυχία!",
+    "errorMsg": "Αποτυχία δημοσίευσης αναφοράς."
   }
 }

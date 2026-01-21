@@ -17,7 +17,6 @@ const DashboardLayout = ({ user, onLogout }) => {
       <Sidebar user={user} isOpen={isSidebarOpen} toggle={toggleSidebar} onLogout={onLogout} />
 
       {/* 3. MAIN CONTENT AREA 
-          ✅ FIX: Added dynamic 'md:ml-64' class.
           If sidebar is open, push content 256px to the right so it doesn't hide behind the sidebar.
       */}
       <div

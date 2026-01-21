@@ -16,9 +16,9 @@ function RadiusSlider({ value, onChange, onFinalChange }) {
         step="1000"
         value={value}
         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-600 accent-blue-600"
-        onChange={e => onChange(Number(e.target.value))}
-        onMouseUp={() => onFinalChange(value)}
-        onTouchEnd={() => onFinalChange(value)}
+        onChange={event => onChange(Number(event.target.value))}
+        onMouseUp={() => onFinalChange?.(value)}
+        onTouchEnd={() => onFinalChange?.(value)}
       />
     </div>
   );

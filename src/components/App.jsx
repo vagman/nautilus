@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../hooks/useThemes';
 
 // Components
 import DashboardLayout from './DashboardLayout';
@@ -13,10 +13,10 @@ import Profile from '../pages/Profile';
 import ChangePassword from '../pages/ChangePassword';
 import Settings from '../pages/Settings';
 import ResetPassword from '../pages/ResetPassword';
-import Disasters from '../pages/Disasters';
 import Volunteer from '../pages/Volunteer';
-import AdminReports from '../pages/AdminReports';
 import Help from '../pages/Help';
+import AdminMap from '../pages/AdminMap';
+import DisasterViewer from '../pages/DisasterViewer';
 
 function App() {
   const { clearUserThemeSync } = useTheme();
@@ -54,8 +54,6 @@ function App() {
       <Routes>
         {/* --- Public Routes --- */}
         <Route path="/login" element={!user ? <AuthPage onAuthSuccess={setUser} /> : <Navigate to="/" />} />
-
-        {/* This route handles both requesting the link AND resetting the password */}
         <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* --- Protected Routes (Require Login) --- */}
@@ -64,14 +62,14 @@ function App() {
             <Route path="/" element={<Dashboard user={user} />} />
             <Route path="/profile" element={<Profile user={user} setUser={handleUpdateUser} />} />
             <Route path="/settings" element={<Settings user={user} updateUser={handleUpdateUser} />} />
-
-            {/* Help Page Route */}
             <Route path="/help" element={<Help />} />
-
             <Route path="/change-password" element={<ChangePassword user={user} onLogout={logout} />} />
-            <Route path="/disasters" element={<Disasters />} />
+            <Route path="/disasters" element={<DisasterViewer />} />
             <Route path="/volunteer" element={<Volunteer user={user} />} />
-            <Route path="/admin/reports" element={user?.role === 'admin' ? <AdminReports /> : <Navigate to="/" />} />
+            <Route
+              path="/admin-reports"
+              element={user?.role === 'admin' ? <AdminMap /> : <Navigate to="/disasters" />}
+            />
           </Route>
         </Route>
 

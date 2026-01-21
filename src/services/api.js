@@ -9,7 +9,7 @@ const getHeaders = () => {
   };
 };
 
-// ✅ Centralized Response Handler
+// Centralized Response Handler
 const handleResponse = async res => {
   if (res.status === 401) {
     console.warn('Session expired. Logging out...');
@@ -50,19 +50,16 @@ export const authService = {
 };
 
 export const userService = {
-  // ✅ UPDATED: Accepts FormData for file uploads
+  // Accepts FormData for file uploads
   updateProfile: async (userId, formData) => {
     const token = localStorage.getItem('token');
 
-    const res = await fetch(`${API_URL}/api/users/${userId}`, {
+    const response = await fetch(`${API_URL}/api/users/${userId}`, {
       method: 'PUT',
-      headers: {
-        // ⚠️ IMPORTANT: No 'Content-Type' here! Browser detects multipart/form-data automatically.
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       body: formData, // Sending the FormData object directly
     });
-    return handleResponse(res);
+    return handleResponse(response);
   },
 
   updateLanguage: async (userId, language) => {
@@ -75,51 +72,51 @@ export const userService = {
   },
 
   updateTheme: async (userId, theme) => {
-    const res = await fetch(`${API_URL}/api/users/${userId}/theme`, {
+    const response = await fetch(`${API_URL}/api/users/${userId}/theme`, {
       method: 'PUT',
       headers: getHeaders(),
       body: JSON.stringify({ theme }),
     });
-    return handleResponse(res);
+    return handleResponse(response);
   },
 
   deleteAccount: async userId => {
-    const res = await fetch(`${API_URL}/api/users/${userId}`, {
+    const response = await fetch(`${API_URL}/api/users/${userId}`, {
       method: 'DELETE',
       headers: getHeaders(),
     });
-    return handleResponse(res);
+    return handleResponse(response);
   },
 };
 
 export const disasterService = {
   getAll: async () => {
-    const res = await fetch(`${API_URL}/api/disasters`, {
+    const response = await fetch(`${API_URL}/api/disasters`, {
       method: 'GET',
       headers: getHeaders(),
     });
-    return handleResponse(res);
+    return handleResponse(response);
   },
 };
 
 export const volunteerService = {
   getAllEvents: async () => {
-    const res = await fetch(`${API_URL}/api/volunteer`, {
+    const response = await fetch(`${API_URL}/api/volunteer`, {
       method: 'GET',
       headers: getHeaders(),
     });
-    return handleResponse(res);
+    return handleResponse(response);
   },
 
   createEvent: async formData => {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_URL}/api/volunteer`, {
+    const response = await fetch(`${API_URL}/api/volunteer`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
       },
       body: formData,
     });
-    return handleResponse(res);
+    return handleResponse(response);
   },
 };

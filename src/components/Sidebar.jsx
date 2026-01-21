@@ -8,6 +8,7 @@ import {
   UserCircle,
   X,
   HelpCircle,
+  ShieldAlert,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +26,8 @@ const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
     }`;
   };
 
+  const isAdmin = user?.role === 'admin';
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -36,14 +39,11 @@ const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* 1. APP LOGO HEADER (Fixed to swap themes) */}
+        {/* 1. APP LOGO HEADER */}
         <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100 dark:border-[#333]">
           <div className="flex items-center gap-3">
-            {/* Logo Wrapper */}
             <div className="w-8 h-8 flex items-center justify-center">
-              {/* Show Dark Logo in Light Mode */}
               <img src={logoDark} alt="Nautilus" className="w-full h-full object-contain dark:hidden" />
-              {/* Show White Logo in Dark Mode */}
               <img src={logoWhite} alt="Nautilus" className="w-full h-full object-contain hidden dark:block" />
             </div>
             <span className="text-xl font-bold text-gray-800 dark:text-white tracking-tight">Nautilus</span>
@@ -56,29 +56,29 @@ const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
         {/* 2. USER PROFILE SECTION */}
         <div className="p-6 border-b border-gray-100 dark:border-[#333]">
           <div className="flex items-center gap-3">
-            {/* Avatar Circle */}
             <div className="relative shrink-0">
-              {user?.profile_picture ? (
+              {user?.profile_image ? (
                 <img
-                  src={user.profile_picture}
+                  src={user.profile_image}
                   alt="Profile"
                   className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 dark:border-[#444]"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 border-2 border-transparent">
+                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
                   <UserCircle size={24} />
                 </div>
               )}
-              {/* Online Status Dot */}
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-[#1e1e2d] rounded-full"></div>
             </div>
 
-            {/* User Name & Role */}
             <div className="flex flex-col overflow-hidden">
               <span className="font-bold text-gray-800 dark:text-white truncate text-sm">
                 {user ? `${user.first_name || ''} ${user.last_name || ''}` : 'Guest User'}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 truncate capitalize">
+              <span
+                className={`text-xs truncate capitalize flex items-center gap-1 ${isAdmin ? 'text-red-500 font-bold' : 'text-gray-500 dark:text-gray-400'}`}
+              >
+                {isAdmin && <ShieldAlert size={12} />}
                 {user?.role || 'Visitor'}
               </span>
             </div>
@@ -92,19 +92,22 @@ const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
             <span className="font-medium">{t('sidebar.dashboard')}</span>
           </NavLink>
 
-          <NavLink to="/profile" className={getLinkClass}>
-            <UserCircle size={20} />
-            <span className="font-medium">{t('sidebar.profile')}</span>
-          </NavLink>
-
-          <NavLink to="/disasters" className={getLinkClass}>
+          {/* DYNAMIC DISASTER MAP LINK */}
+          <NavLink to={isAdmin ? '/admin-reports' : '/disasters'} className={getLinkClass}>
             <MapIcon size={20} />
-            <span className="font-medium">{t('sidebar.disasterMap')}</span>
+            <span className="font-medium">{isAdmin ? t('sidebar.adminMap') : t('sidebar.disasterMap')}</span>
           </NavLink>
 
           <NavLink to="/volunteer" className={getLinkClass}>
             <Users size={20} />
             <span className="font-medium">{t('sidebar.volunteerHub')}</span>
+          </NavLink>
+
+          <div className="my-2 border-t border-gray-100 dark:border-[#333]" />
+
+          <NavLink to="/profile" className={getLinkClass}>
+            <UserCircle size={20} />
+            <span className="font-medium">{t('sidebar.profile')}</span>
           </NavLink>
 
           <NavLink to="/help" className={getLinkClass}>
@@ -119,7 +122,7 @@ const Sidebar = ({ user, isOpen, toggle, onLogout }) => {
 
           <button
             onClick={onLogout}
-            className="flex items-center gap-4 px-6 py-3 mt-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors w-full text-left"
+            className="flex items-center gap-4 px-6 py-3 mt-auto text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors w-full text-left"
           >
             <LogOut size={20} />
             <span className="font-medium">{t('sidebar.logout')}</span>

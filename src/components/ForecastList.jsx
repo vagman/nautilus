@@ -16,7 +16,10 @@ function ForecastList({ forecast }) {
 
   return (
     <div className="w-full max-w-4xl">
-      <h2 className="text-xl font-bold mb-4 ml-1">{t('forecast.title')}</h2>
+      <h2 className="text-xl font-bold mb-4 ml-1 text-gray-800 dark:text-white transition-colors">
+        {t('forecast.title')}
+      </h2>
+
       <div className="grid gap-4">
         {groupForecastByDay(forecast).map(([date, entries]) => {
           const temps = entries.map(e => e.main.temp);
@@ -34,7 +37,6 @@ function ForecastList({ forecast }) {
               className="p-4 bg-white dark:bg-[#2d2d2d] rounded-lg shadow-sm border border-gray-200 dark:border-[#444] transition-colors"
             >
               <h3 className="text-lg font-semibold border-b border-gray-100 dark:border-[#444] pb-2 mb-2 text-gray-800 dark:text-gray-100">
-                {/* Automatically formats date based on current language */}
                 {new Date(date).toLocaleDateString(i18n.language, {
                   weekday: 'long',
                   year: 'numeric',

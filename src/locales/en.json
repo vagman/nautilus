@@ -120,6 +120,7 @@
     "dashboard": "Weather Map",
     "profile": "Profile",
     "disasterMap": "Disaster Map",
+    "adminMap": "Disaster Management",
     "manageReports": "Create Report",
     "volunteerHub": "Volunteer Hub",
     "settings": "Settings",
@@ -137,7 +138,7 @@
       "descPlaceholder": "Description",
       "locationPlaceholder": "Location",
       "durationPlaceholder": "Duration (e.g., 2 hours)",
-      "imagePlaceholder": "Image URL (http://...)",
+      "imagePlaceholder": "Upload an image",
       "toolsPlaceholder": "Select Required Tools...",
       "toolGloves": "Gloves & Bags",
       "toolShovels": "Shovels & Boots",
@@ -169,5 +170,17 @@
     },
     "reportButton": "Report Incident",
     "noDisasters": "No active incidents reported at this time."
+  },
+  "adminMap": {
+    "title": "Disaster Control",
+    "instruction": "Click map to set location and upload evidence.",
+    "titlePlaceholder": "Title",
+    "descPlaceholder": "Description",
+    "uploadImg": "Upload Event Image",
+    "coordinates": "LOC",
+    "publishBtn": "Publish Report",
+    "publishing": "Publishing...",
+    "successMsg": "Report published successfully!",
+    "errorMsg": "Failed to publish report."
   }
 }

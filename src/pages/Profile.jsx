@@ -9,7 +9,6 @@ function Profile({ user, setUser }) {
   const { t } = useTranslation();
   const fileInputRef = useRef(null);
 
-  // Local state for text inputs
   const [formData, setFormData] = useState({
     first_name: user.first_name || '',
     last_name: user.last_name || '',
@@ -17,7 +16,7 @@ function Profile({ user, setUser }) {
 
   // State for the new file to upload
   const [selectedFile, setSelectedFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(user.profile_picture || DEFAULT_AVATAR);
+  const [previewImage, setPreviewImage] = useState(user.profile_image || DEFAULT_AVATAR);
 
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -26,17 +25,14 @@ function Profile({ user, setUser }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Handle File Selection (Just preview, don't upload yet)
   const handleImageChange = e => {
     const file = e.target.files[0];
     if (file) {
       setSelectedFile(file);
-      // Create a temporary URL for instant preview
       setPreviewImage(URL.createObjectURL(file));
     }
   };
 
-  // ✅ Handle Submit (Send Text + File together)
   const handleSubmit = async e => {
     e.preventDefault();
     setIsLoading(true);
@@ -47,15 +43,16 @@ function Profile({ user, setUser }) {
       const data = new FormData();
       data.append('first_name', formData.first_name);
       data.append('last_name', formData.last_name);
-      data.append('email', user.email); // ✅ FIX: Added email to FormData
+      data.append('email', user.email);
 
       // Only append the file if the user selected a new one
       if (selectedFile) {
-        data.append('profile_picture', selectedFile);
+        data.append('profile_image', selectedFile);
       }
 
       // Send to backend
       const updatedUser = await userService.updateProfile(user.id, data);
+      6;
 
       // Update global state & local storage
       setUser(updatedUser);

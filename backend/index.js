@@ -9,11 +9,11 @@ import { query } from './database.js';
 
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import eventRoutes from './routes/eventRoutes.js';
+import disasterRoutes from './routes/disasterRoutes.js';
+import volunteerRoutes from './routes/volunteerRoutes.js';
 
 dotenv.config();
 
-// Fix for __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -25,7 +25,7 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// ✅ CRITICAL: Serve Uploaded Files Publicly
+//  Serve Uploaded Files Publicly
 // This allows the frontend to view images at http://localhost:4000/uploads/volunteer/image.jpg
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -54,7 +54,8 @@ app.use('/api/', apiLimiter);
 // --- USE ROUTERS ---
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api', eventRoutes);
+app.use('/api/disasters', disasterRoutes);
+app.use('/api/volunteer', volunteerRoutes);
 
 // Test Route
 app.get('/test-db', async (request, response) => {

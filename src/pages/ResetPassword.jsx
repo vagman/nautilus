@@ -17,8 +17,8 @@ function ResetPassword() {
   const [message, setMessage] = useState('');
 
   // --- MODE A: REQUEST LINK (No Token) ---
-  const handleRequestLink = async e => {
-    e.preventDefault();
+  const handleRequestLink = async event => {
+    event.preventDefault();
     setStatus('loading');
 
     try {
@@ -30,16 +30,16 @@ function ResetPassword() {
 
       setStatus('success');
       setMessage('If an account exists, we sent a link!');
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       setStatus('error');
       setMessage('Network error. Is the server running?');
     }
   };
 
   // --- MODE B: RESET PASSWORD (Has Token) ---
-  const handleResetPassword = async e => {
-    e.preventDefault();
+  const handleResetPassword = async event => {
+    event.preventDefault();
     if (newPassword !== confirmPassword) {
       setMessage("Passwords don't match");
       setStatus('error');
@@ -63,13 +63,14 @@ function ResetPassword() {
         setStatus('error');
         setMessage(data.error || 'Token expired or invalid');
       }
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setStatus('error');
       setMessage('Failed to connect to server');
     }
   };
 
-  // 🎨 RENDER: MODE SELECTION
+  // RENDER: MODE SELECTION
   if (token) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-[#1a1a2e] p-4">
