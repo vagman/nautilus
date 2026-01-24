@@ -14,6 +14,7 @@ import ChangePassword from '../pages/ChangePassword';
 import Settings from '../pages/Settings';
 import ResetPassword from '../pages/ResetPassword';
 import Volunteer from '../pages/Volunteer';
+import AdminVolunteer from '../pages/AdminVolunteer';
 import Help from '../pages/Help';
 import AdminMap from '../pages/AdminMap';
 import DisasterViewer from '../pages/DisasterViewer';
@@ -65,7 +66,14 @@ function App() {
             <Route path="/help" element={<Help />} />
             <Route path="/change-password" element={<ChangePassword user={user} onLogout={logout} />} />
             <Route path="/disasters" element={<DisasterViewer />} />
-            <Route path="/volunteer" element={<Volunteer user={user} />} />
+
+            {/* --- UPDATED ROUTE HERE --- */}
+            {/* If Admin -> Show AdminVolunteer (Split Screen). If User -> Show Volunteer (Slider) */}
+            <Route
+              path="/volunteer"
+              element={user?.role === 'admin' ? <AdminVolunteer /> : <Volunteer user={user} />}
+            />
+
             <Route
               path="/admin-reports"
               element={user?.role === 'admin' ? <AdminMap /> : <Navigate to="/disasters" />}

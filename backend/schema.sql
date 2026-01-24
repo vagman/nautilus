@@ -41,6 +41,8 @@ CREATE TABLE volunteer_events (
   description TEXT,
   event_image TEXT,
   location VARCHAR(255),
+  latitude DECIMAL(10, 8),
+  longitude DECIMAL(11, 8),
   event_date TIMESTAMP,
   duration VARCHAR(50),
   items_needed TEXT,

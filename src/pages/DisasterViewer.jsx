@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, Circle, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { X, MapPin, Calendar, Hash, AlertTriangle } from 'lucide-react';
+import { X, MapPin, Calendar, Hash } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import RadiusSlider from '../components/RadiusSlider';
 import Footer from '../components/Footer';

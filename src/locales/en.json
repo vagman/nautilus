@@ -131,8 +131,10 @@
   "volunteer": {
     "title": "Volunteer Hub",
     "subtitle": "Join the community and make a difference.",
-    "newEvent": "New Event",
-    "cancel": "Cancel",
+    "radius": "Radius",
+    "youAreHere": "You are here (Home)",
+    "join": "Join Mission",
+    "noEventsRadius": "No events found within {{radius}}km. Try expanding your radius!",
     "form": {
       "titlePlaceholder": "Event Title",
       "descPlaceholder": "Description",
@@ -149,6 +151,24 @@
     "noEvents": "No volunteer events found. Check back later!",
     "needs": "Needs",
     "viewDetails": "View Details"
+  },
+  "adminVolunteer": {
+    "title": "Create Volunteer Mission",
+    "titlePlaceholder": "Event Title",
+    "descPlaceholder": "Description...",
+    "durationPlaceholder": "Duration (e.g. 2h)",
+    "locationPlaceholder": "Location Name (e.g. Syntagma)",
+    "itemsPlaceholder": "Items needed (Gloves, Water...)",
+    "uploadText": "Click to upload image",
+    "locationSelected": "Location Selected",
+    "locationInstruction": "Please click on the map to set the location for this event.",
+    "btnCreating": "Creating...",
+    "btnPublish": "Publish Event",
+    "alertNoLocation": "Please click on the map to set the exact location!",
+    "alertSuccess": "Volunteer Event Created Successfully!",
+    "alertError": "Failed to create event",
+    "mapPopupNew": "New Event Location",
+    "floatingPrompt": "Click on the map to add a volunteering event"
   },
   "disasters": {
     "title": "Natural Disasters Map",

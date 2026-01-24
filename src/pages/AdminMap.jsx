@@ -4,7 +4,6 @@ import axios from 'axios';
 import L from 'leaflet';
 import { Image as ImageIcon, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import Footer from '../components/Footer';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 const BlueIcon = new L.Icon({
