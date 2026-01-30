@@ -66,7 +66,7 @@ router.put('/:id', protect, uploadProfile.single('profile_image'), async (reques
   }
 });
 
-// UPDATE LANGUAGE PREFERENCE
+// Update language preference
 router.put('/:id/language', protect, async (request, response) => {
   try {
     const { language } = request.body;
@@ -85,7 +85,7 @@ router.put('/:id/language', protect, async (request, response) => {
   }
 });
 
-// UPDATE THEME PREFERENCE
+// Update theme preference
 router.put('/:id/theme', protect, async (request, response) => {
   try {
     const { theme } = request.body;

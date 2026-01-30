@@ -37,7 +37,7 @@ function ResetPassword() {
     }
   };
 
-  // --- MODE B: RESET PASSWORD (Has Token) ---
+  // --- MODE B: RESET PASSWORD ---
   const handleResetPassword = async event => {
     event.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -58,7 +58,7 @@ function ResetPassword() {
 
       if (res.ok) {
         setStatus('success');
-        setTimeout(() => navigate('/login'), 3000); // Auto redirect
+        setTimeout(() => navigate('/login'), 3000);
       } else {
         setStatus('error');
         setMessage(data.error || 'Token expired or invalid');

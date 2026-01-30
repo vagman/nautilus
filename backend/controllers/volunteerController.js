@@ -20,6 +20,7 @@ export const getVolunteerEvents = async (request, response) => {
   }
 };
 
+// --- CREATE VOLUNTEER EVENT ---
 export const createVolunteerEvent = async (request, response) => {
   try {
     // 1. Extract latitude and longitude from the request body
