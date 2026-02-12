@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import process from 'process';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
@@ -11,8 +10,6 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import disasterRoutes from './routes/disasterRoutes.js';
 import volunteerRoutes from './routes/volunteerRoutes.js';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

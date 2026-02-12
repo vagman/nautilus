@@ -3,13 +3,10 @@ import rateLimit from 'express-rate-limit';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
 import process from 'process';
 
 import { signup, login } from '../controllers/authController.js';
 import { query } from '../database.js';
-
-dotenv.config();
 
 const router = express.Router();
 
