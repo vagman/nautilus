@@ -1,10 +1,10 @@
-# 🌦️ Nautilus: Advanced Weather & Disaster Dashboard
+## 🌦️ Nautilus: Advanced Weather & Disaster Dashboard
 
 Nautilus is a comprehensive full-stack environmental monitoring platform. It combines real-time weather forecasting with a community-driven disaster management system, allowing users to stay safe and coordinate volunteer efforts.
 
 ---
 
-## 🚀 Features
+### 🚀 Features
 
 - **Real-time Weather:** Fetches data using OpenWeatherMap API.
 - **5-Day Forecast:** Displays temperature, humidity, wind speed, and rain probability.
@@ -17,9 +17,9 @@ Nautilus is a comprehensive full-stack environmental monitoring platform. It com
 
 ---
 
-## 🛠️ Tech Stack
+### 🛠️ Tech Stack
 
-### Frontend
+#### Frontend
 
 - Framework: React (Vite)
 - Styling: Tailwind CSS + Framer Motion
@@ -28,7 +28,7 @@ Nautilus is a comprehensive full-stack environmental monitoring platform. It com
 - Internationalization: i18next
 - Icons: Lucide React
 
-### Backend
+#### Backend
 
 - Environment: Node.js + Express.js (ES Modules)
 - Database: PostgreSQL
@@ -39,16 +39,16 @@ Nautilus is a comprehensive full-stack environmental monitoring platform. It com
 
 ---
 
-## ⚙️ Getting Started
+### ⚙️ Getting Started
 
-### 🖥️ 1. Clone the Repo
+#### 🖥️ 1. Clone the Repo
 
 ```shell
 git clone https://github.com/vagman/nautilus.git
 cd nautilus
 ```
 
-### 🌐 2. Frontend Setup
+#### 🌐 2. Frontend Setup
 
 ```shell
 npm install          # Install dependencies
@@ -61,7 +61,7 @@ You must create a `.env` file in the root project directory:
 VITE_WEATHER_API_KEY=your_openweathermap_api_key
 ```
 
-### 🔧 3. Backend Setup
+#### 🔧 3. Backend Setup
 
 ```shell
 cd weather-app-backend
@@ -114,49 +114,12 @@ JWT_SECRET=your_super_secret_key
 - Make sure your OpenWeatherMap API key is valid
 - Security: Passwords are never stored in plain text; they are hashed using `bcryptjs`.
 
-### 📌 Project Status & Roadmap
+### 🛠️ Tech Stack
 
-## ✅ Completed Milestones
-
-### **Core & Infrastructure**
-
-- [x] **Core Features:** Fetch and display weather data & extreme condition alerts.
-- [x] **Authentication:** Secure Login/Signup with Password Hashing & JWT.
-- [x] **Secure Email System:** Integrated **Google OAuth 2.0** with Nodemailer for secure delivery of system emails.
-- [x] **Theming:** Global Dark/Light mode with Database persistence & UI Sync.
-- [x] **Navigation:** Responsive Sidebar with "Settings" menu & Language toggles.
-- [x] **Architecture:** Modular Backend Routes (`/api/auth`, `/api/users`, etc.) & Centralized Frontend API.
-- [x] **Database:** Standardized PostgreSQL schema with synchronized user preferences.
-
-### **Phase 1: UI/UX Refinement**
-
-- [x] **Profile Management:** Users can update details and upload profile pictures (Base64).
-- [x] **UI Polish:** Responsive layouts, loading states, and consistent card designs.
-
-### **Phase 2: Community & Content**
-
-- [x] **Volunteer Page:** A dedicated hub for creating and viewing disaster relief events.
-- [x] **About Section:** Integrated into Settings for easy access to version/mission info.
-
-### **Phase 3: Administration & Security (RBAC)**
-
-- [x] **Role-Based Access Control (RBAC):** Database support for `Admin` vs `User` roles.
-- [x] **Admin Reporting:** Interactive map interface for admins to publish new disaster alerts.
-- [x] **Admin Controls:** Conditional rendering of "Create Event" and "Manage Reports" buttons.
-- [x] **Password Recovery:** Full "Forgot Password" flow with secure email links and token validation.
-- [x] **Brute-Force Protection:** Implemented Rate Limiting (express-rate-limit) on login/signup endpoints.
-
-## 🛠️ Tech Stack
-
-- **Frontend:** React (Vite), Tailwind CSS, Leaflet Maps, Framer Motion (animations), Lucide React (icons), i18next (translation).
+- **Frontend:** React (Vite), Tailwind CSS, Leaflet Maps, Lucide React (icons), i18next (translation).
 - **Backend:** Node.js, Express, PostgreSQL, Nodemailer (OAuth 2.0).
 - **Security:** BCrypt, JWT, Express Rate Limit.
 
-## 🔮 Coming Soon / Next Steps
+### 📄 License
 
-- [ ] **Push Notifications:** Browser notifications for high-severity alerts in the user's radius.
-- [ ] **Chat System:** Real-time chat for volunteer event coordination.
-- [ ] **Advanced Filtering:** Filter disasters by type (Fire, Flood, Earthquake).
-
-📄 License
 This project is open source and available under the MIT License.
